@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useDraggable } from '@dnd-kit/core';
-import type { Task } from '../../types';
+import type { Task } from '../../stores/db';
 import './TaskCard.css';
 
 interface TaskCardProps {

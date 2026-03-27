@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import type { DragStartEvent, DragEndEvent } from '@dnd-kit/core';
-import { useBoard } from '../../hooks/useBoard';
+import { useDbBoard } from '../../hooks/useDbBoard';
 import { Column } from '../Column/Column';
-import type { Task } from '../../types';
+import type { Task } from '../../stores/db';
 import './Board.css';
 
 export function Board() {
-  const { board, addTask, deleteTask, updateTask, moveTask } = useBoard();
+  const { boardData, loading, addTask, deleteTask, updateTask, moveTask } = useDbBoard();
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const sensors = useSensors(
@@ -18,14 +18,13 @@ export function Board() {
     })
   );
 
-  const sortedColumns = [...board.columns].sort((a, b) => a.order - b.order);
-
   const handleDragStart = (event: DragStartEvent) => {
+    if (!boardData) return;
+
     const { active } = event;
     const taskId = active.id as string;
 
-    // 找到被拖拽的任务
-    for (const column of board.columns) {
+    for (const column of boardData.columns) {
       const task = column.tasks.find((t) => t.id === taskId);
       if (task) {
         setActiveTask(task);
@@ -35,6 +34,8 @@ export function Board() {
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
+    if (!boardData) return;
+
     const { active, over } = event;
     setActiveTask(null);
 
@@ -43,8 +44,7 @@ export function Board() {
     const taskId = active.id as string;
     const targetColumnId = over.id as string;
 
-    // 检查是否拖到另一列
-    const sourceColumn = board.columns.find((col) =>
+    const sourceColumn = boardData.columns.find((col) =>
       col.tasks.some((t) => t.id === taskId)
     );
 
@@ -52,6 +52,22 @@ export function Board() {
       moveTask(taskId, targetColumnId);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="board">
+        <div className="loading">加载中...</div>
+      </div>
+    );
+  }
+
+  if (!boardData) {
+    return (
+      <div className="board">
+        <div className="loading">数据加载失败</div>
+      </div>
+    );
+  }
 
   return (
     <DndContext
@@ -61,10 +77,10 @@ export function Board() {
     >
       <div className="board">
         <div className="board-header">
-          <h1 className="board-title">{board.name}</h1>
+          <h1 className="board-title">{boardData.board.name}</h1>
         </div>
         <div className="board-columns">
-          {sortedColumns.map((column) => (
+          {boardData.columns.map((column) => (
             <Column
               key={column.id}
               column={column}

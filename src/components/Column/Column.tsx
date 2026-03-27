@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import { useDroppable } from '@dnd-kit/core';
-import type { Column as ColumnType } from '../../types';
+import type { Column, Task } from '../../stores/db';
 import { TaskCard } from '../TaskCard/TaskCard';
 import './Column.css';
 
 interface ColumnProps {
-  column: ColumnType;
+  column: Column & { tasks: Task[] };
   onAddTask: (columnId: string, title: string) => void;
   onDeleteTask: (taskId: string) => void;
   onUpdateTask: (taskId: string, newTitle: string) => void;
