@@ -1,14 +1,73 @@
+import { useState, useRef, useEffect } from 'react';
 import type { Task } from '../../types';
 import './TaskCard.css';
 
 interface TaskCardProps {
   task: Task;
+  onDelete: (taskId: string) => void;
+  onUpdate: (taskId: string, newTitle: string) => void;
 }
 
-export function TaskCard({ task }: TaskCardProps) {
+export function TaskCard({ task, onDelete, onUpdate }: TaskCardProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(task.title);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isEditing]);
+
+  const handleDoubleClick = () => {
+    setIsEditing(true);
+    setEditTitle(task.title);
+  };
+
+  const handleSave = () => {
+    if (editTitle.trim()) {
+      onUpdate(task.id, editTitle);
+    }
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSave();
+    } else if (e.key === 'Escape') {
+      setEditTitle(task.title);
+      setIsEditing(false);
+    }
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDelete(task.id);
+  };
+
+  if (isEditing) {
+    return (
+      <div className="task-card editing">
+        <input
+          ref={inputRef}
+          type="text"
+          className="edit-input"
+          value={editTitle}
+          onChange={(e) => setEditTitle(e.target.value)}
+          onBlur={handleSave}
+          onKeyDown={handleKeyDown}
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="task-card">
+    <div className="task-card" onDoubleClick={handleDoubleClick}>
       <span className="task-title">{task.title}</span>
+      <button className="delete-btn" onClick={handleDelete} title="删除任务">
+        ×
+      </button>
     </div>
   );
 }

@@ -1,12 +1,9 @@
-import type { Board as BoardType } from '../../types';
+import { useBoard } from '../../hooks/useBoard';
 import { Column } from '../Column/Column';
 import './Board.css';
 
-interface BoardProps {
-  board: BoardType;
-}
-
-export function Board({ board }: BoardProps) {
+export function Board() {
+  const { board, addTask, deleteTask, updateTask } = useBoard();
   const sortedColumns = [...board.columns].sort((a, b) => a.order - b.order);
 
   return (
@@ -16,7 +13,13 @@ export function Board({ board }: BoardProps) {
       </div>
       <div className="board-columns">
         {sortedColumns.map((column) => (
-          <Column key={column.id} column={column} />
+          <Column
+            key={column.id}
+            column={column}
+            onAddTask={addTask}
+            onDeleteTask={deleteTask}
+            onUpdateTask={updateTask}
+          />
         ))}
       </div>
     </div>
