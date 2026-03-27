@@ -1,38 +1,34 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+本文件为 Claude Code 提供项目指导。
 
-## Project Overview
-
-Personal Kanban - A web-based personal task management tool using Kanban methodology. Runs locally in the browser with IndexedDB storage.
-
-## Commands
+## 常用命令
 
 ```bash
-npm run dev      # Start development server (http://localhost:5173)
-npm run build    # TypeScript check + production build
-npm run lint     # Run ESLint
-npm run preview  # Preview production build
+npm run dev      # 启动开发服务器 (http://localhost:5173)
+npm run build    # TypeScript检查 + 生产构建
+npm run lint     # ESLint检查
 ```
 
-## Architecture
+## 技术栈
 
-**Tech Stack:** React 19 + Vite 8 + TypeScript
+React 19 + Vite 8 + TypeScript
 
-**Planned Structure:**
-- `src/components/Board/` - Kanban board container
-- `src/components/Column/` - Individual columns (Todo/In Progress/Done)
-- `src/components/TaskCard/` - Task cards with drag support
-- `src/types/` - TypeScript interfaces (Board, Column, Task, SubTask, Tag)
-- `src/stores/` - State management
-- `src/hooks/` - Custom React hooks
+## 目录结构
 
-**Data Model:** See REQUIREMENTS.md for full interface definitions
+```
+src/
+├── components/    # 组件 (Board/Column/TaskCard)
+├── hooks/         # 自定义hooks (useBoard)
+├── types/         # TypeScript类型定义
+└── stores/        # 模拟数据
+```
 
-**Key Libraries to Add:**
-- `@dnd-kit/core` - Drag and drop
-- `dexie` - IndexedDB wrapper for persistence
+## 关键文档
 
-## Development Approach
+- **[REQUIREMENTS.md](REQUIREMENTS.md)** - 完整需求文档、数据模型、技术选型
+- **[TODOLIST.md](TODOLIST.md)** - 开发进度追踪
 
-This project follows an incremental demo-based development process. Each feature is developed as a standalone demo for user validation before proceeding. See REQUIREMENTS.md for the full development roadmap and current progress.
+## 开发方式
+
+增量式 Demo 驱动开发，每完成一个 Demo 需用户验证后再继续。
