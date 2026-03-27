@@ -74,3 +74,8 @@
 .add-task-input:focus {
   border-color: #764ba2;
 }
+
+.column.drag-over {
+  background: #d4d7dc;
+  box-shadow: 0 0 0 2px #667eea;
+}

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useDroppable } from '@dnd-kit/core';
 import type { Column as ColumnType } from '../../types';
 import { TaskCard } from '../TaskCard/TaskCard';
 import './Column.css';
@@ -14,6 +15,10 @@ export function Column({ column, onAddTask, onDeleteTask, onUpdateTask }: Column
   const [isAdding, setIsAdding] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { setNodeRef, isOver } = useDroppable({
+    id: column.id,
+  });
 
   useEffect(() => {
     if (isAdding && inputRef.current) {
@@ -39,7 +44,10 @@ export function Column({ column, onAddTask, onDeleteTask, onUpdateTask }: Column
   };
 
   return (
-    <div className="column">
+    <div
+      ref={setNodeRef}
+      className={`column ${isOver ? 'drag-over' : ''}`}
+    >
       <div className="column-header">
         <h3 className="column-title">{column.name}</h3>
         <span className="task-count">{column.tasks.length}</span>

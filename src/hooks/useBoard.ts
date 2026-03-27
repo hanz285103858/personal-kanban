@@ -55,10 +55,40 @@ export function useBoard() {
     }));
   }, []);
 
+  // 移动任务到另一列
+  const moveTask = useCallback((taskId: string, targetColumnId: string) => {
+    setBoard((prev) => {
+      let movedTask: Task | null = null;
+
+      // 找到并移除任务
+      const columnsWithoutTask = prev.columns.map((col) => {
+        const task = col.tasks.find((t) => t.id === taskId);
+        if (task) {
+          movedTask = { ...task, columnId: targetColumnId };
+          return { ...col, tasks: col.tasks.filter((t) => t.id !== taskId) };
+        }
+        return col;
+      });
+
+      if (!movedTask) return prev;
+
+      // 添加到目标列
+      return {
+        ...prev,
+        columns: columnsWithoutTask.map((col) =>
+          col.id === targetColumnId
+            ? { ...col, tasks: [...col.tasks, movedTask!] }
+            : col
+        ),
+      };
+    });
+  }, []);
+
   return {
     board,
     addTask,
     deleteTask,
     updateTask,
+    moveTask,
   };
 }

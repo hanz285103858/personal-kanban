@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useDraggable } from '@dnd-kit/core';
 import type { Task } from '../../types';
 import './TaskCard.css';
 
@@ -13,6 +14,16 @@ export function TaskCard({ task, onDelete, onUpdate }: TaskCardProps) {
   const [editTitle, setEditTitle] = useState(task.title);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: task.id,
+  });
+
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+      }
+    : undefined;
+
   useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
@@ -20,7 +31,8 @@ export function TaskCard({ task, onDelete, onUpdate }: TaskCardProps) {
     }
   }, [isEditing]);
 
-  const handleDoubleClick = () => {
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsEditing(true);
     setEditTitle(task.title);
   };
@@ -63,7 +75,14 @@ export function TaskCard({ task, onDelete, onUpdate }: TaskCardProps) {
   }
 
   return (
-    <div className="task-card" onDoubleClick={handleDoubleClick}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`task-card ${isDragging ? 'dragging' : ''}`}
+      onDoubleClick={handleDoubleClick}
+      {...listeners}
+      {...attributes}
+    >
       <span className="task-title">{task.title}</span>
       <button className="delete-btn" onClick={handleDelete} title="删除任务">
         ×

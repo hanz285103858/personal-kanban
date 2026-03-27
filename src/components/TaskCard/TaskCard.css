@@ -61,3 +61,8 @@
 .edit-input:focus {
   border-color: #764ba2;
 }
+
+.task-card.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
