@@ -31,4 +31,4 @@ src/
 
 ## 开发方式
 
-增量式 Demo 驱动开发，每完成一个 Demo 需用户验证后再继续。
+增量式 Demo 驱动开发，每完成一个 Demo 需用户验证后再继续。每完成一个Demo，git提交代码，刷新**[TODOLIST.md](TODOLIST.md)**
