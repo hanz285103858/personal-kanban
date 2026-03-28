@@ -39,6 +39,7 @@ export interface Task {
   subtasks?: Subtask[];  // 子任务列表
   quadrant?: Quadrant;  // 四象限标记
   tags?: string[];  // 标签ID列表
+  order: number;  // 任务排序
   createdAt: Date;
 }
 
@@ -66,23 +67,29 @@ const db = new Dexie('PersonalKanbanDB') as Dexie & {
   tasks: EntityTable<Task, 'id'>;
 };
 
-db.version(2).stores({
+db.version(3).stores({
   boards: 'id, name, order',
   columns: 'id, boardId, order',
-  tasks: 'id, columnId',
+  tasks: 'id, columnId, order',
 }).upgrade(async (tx) => {
-  // 迁移现有数据，为列添加 boardId
-  const columns = await tx.table('columns').toArray();
-  for (const col of columns) {
-    if (!col.boardId) {
-      await tx.table('columns').update(col.id, { boardId: 'board-1', order: col.order || 0 });
+  // 为现有任务添加 order 字段
+  const tasks = await tx.table('tasks').toArray();
+  // 按列分组
+  const tasksByColumn: Record<string, Task[]> = {};
+  for (const task of tasks) {
+    if (!tasksByColumn[task.columnId]) {
+      tasksByColumn[task.columnId] = [];
     }
+    tasksByColumn[task.columnId].push(task);
   }
-  // 为现有的 Board 添加 order 和 createdAt 字段
-  const boards = await tx.table('boards').toArray();
-  for (const board of boards) {
-    if (board.order === undefined) {
-      await tx.table('boards').update(board.id, { order: 0, createdAt: new Date() });
+  // 为每列的任务按创建时间排序并分配 order
+  for (const columnId of Object.keys(tasksByColumn)) {
+    const columnTasks = tasksByColumn[columnId];
+    columnTasks.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    for (let i = 0; i < columnTasks.length; i++) {
+      if (columnTasks[i].order === undefined) {
+        await tx.table('tasks').update(columnTasks[i].id, { order: i });
+      }
     }
   }
 });

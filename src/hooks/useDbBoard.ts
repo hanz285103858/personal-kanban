@@ -19,10 +19,10 @@ const getDefaultColumns = (boardId: string): Column[] => [
 
 // 默认任务模板
 const getDefaultTasks = (boardId: string): Task[] => [
-  { id: `${boardId}-task-1`, columnId: `${boardId}-col-1`, title: '学习 React 基础', createdAt: new Date() },
-  { id: `${boardId}-task-2`, columnId: `${boardId}-col-1`, title: '完成项目文档', createdAt: new Date() },
-  { id: `${boardId}-task-3`, columnId: `${boardId}-col-2`, title: '开发看板功能', createdAt: new Date() },
-  { id: `${boardId}-task-4`, columnId: `${boardId}-col-3`, title: '初始化项目', createdAt: new Date() },
+  { id: `${boardId}-task-1`, columnId: `${boardId}-col-1`, title: '学习 React 基础', order: 0, createdAt: new Date() },
+  { id: `${boardId}-task-2`, columnId: `${boardId}-col-1`, title: '完成项目文档', order: 1, createdAt: new Date() },
+  { id: `${boardId}-task-3`, columnId: `${boardId}-col-2`, title: '开发看板功能', order: 0, createdAt: new Date() },
+  { id: `${boardId}-task-4`, columnId: `${boardId}-col-3`, title: '初始化项目', order: 0, createdAt: new Date() },
 ];
 
 const CURRENT_BOARD_KEY = 'personal-kanban-current-board';
@@ -49,7 +49,7 @@ export function useDbBoard() {
       const columns = await db.columns.where('boardId').equals(boardId).sortBy('order');
       const columnIds = columns.map(c => c.id);
       const tasks = columnIds.length > 0
-        ? await db.tasks.where('columnId').anyOf(columnIds).toArray()
+        ? await db.tasks.where('columnId').anyOf(columnIds).sortBy('order')
         : [];
 
       const data: BoardData = {
@@ -196,10 +196,21 @@ export function useDbBoard() {
   const addTask = useCallback(async (columnId: string, title: string) => {
     if (!title.trim()) return;
 
+    // 获取当前列的任务数量，用于计算 order
+    const columnTasks = await db.tasks
+      .where('columnId')
+      .equals(columnId)
+      .toArray();
+
+    const maxOrder = columnTasks.length > 0
+      ? Math.max(...columnTasks.map(t => t.order ?? 0))
+      : -1;
+
     const newTask: Task = {
       id: generateId(),
       columnId,
       title: title.trim(),
+      order: maxOrder + 1,
       createdAt: new Date(),
     };
 
@@ -233,6 +244,74 @@ export function useDbBoard() {
     if (currentBoardId) {
       await loadBoardData(currentBoardId);
     }
+  }, [currentBoardId, loadBoardData]);
+
+  // 重排序任务（支持同列排序和跨列移动）
+  const reorderTasks = useCallback(async (
+    taskId: string,
+    targetColumnId: string,
+    newOrder: number
+  ) => {
+    if (!currentBoardId) return;
+
+    const movingTask = await db.tasks.get(taskId);
+    if (!movingTask) return;
+
+    const oldColumnId = movingTask.columnId;
+    const isSameColumn = oldColumnId === targetColumnId;
+
+    if (isSameColumn) {
+      // 同列内重排序
+      const columnTasks = await db.tasks
+        .where('columnId')
+        .equals(targetColumnId)
+        .sortBy('order');
+
+      const otherTasks = columnTasks.filter(t => t.id !== taskId);
+      const reorderedTasks = [
+        ...otherTasks.slice(0, newOrder),
+        movingTask,
+        ...otherTasks.slice(newOrder)
+      ];
+
+      // 批量更新 order
+      for (let i = 0; i < reorderedTasks.length; i++) {
+        await db.tasks.update(reorderedTasks[i].id, { order: i });
+      }
+    } else {
+      // 跨列移动
+      // 1. 从原列移除，更新原列其他任务的 order
+      const oldColumnTasks = await db.tasks
+        .where('columnId')
+        .equals(oldColumnId)
+        .sortBy('order');
+
+      const remainingTasks = oldColumnTasks.filter(t => t.id !== taskId);
+      for (let i = 0; i < remainingTasks.length; i++) {
+        await db.tasks.update(remainingTasks[i].id, { order: i });
+      }
+
+      // 2. 插入到新列的指定位置
+      const newColumnTasks = await db.tasks
+        .where('columnId')
+        .equals(targetColumnId)
+        .sortBy('order');
+
+      const reorderedTasks = [
+        ...newColumnTasks.slice(0, newOrder),
+        { ...movingTask, columnId: targetColumnId },
+        ...newColumnTasks.slice(newOrder)
+      ];
+
+      for (let i = 0; i < reorderedTasks.length; i++) {
+        await db.tasks.update(reorderedTasks[i].id, {
+          order: i,
+          columnId: targetColumnId
+        });
+      }
+    }
+
+    await loadBoardData(currentBoardId);
   }, [currentBoardId, loadBoardData]);
 
   // 更新任务描述
@@ -349,6 +428,43 @@ export function useDbBoard() {
     }
   }, [currentBoardId, loadBoardData]);
 
+  // 重命名列
+  const renameColumn = useCallback(async (columnId: string, name: string) => {
+    if (!name.trim()) return;
+
+    await db.columns.update(columnId, { name: name.trim() });
+    if (currentBoardId) {
+      await loadBoardData(currentBoardId);
+    }
+  }, [currentBoardId, loadBoardData]);
+
+  // 添加新列
+  const addColumn = useCallback(async (name: string) => {
+    if (!currentBoardId || !name.trim()) return null;
+
+    // 获取当前看板的列数量，用于计算 order
+    const existingColumns = await db.columns
+      .where('boardId')
+      .equals(currentBoardId)
+      .toArray();
+
+    const maxOrder = existingColumns.length > 0
+      ? Math.max(...existingColumns.map(c => c.order))
+      : -1;
+
+    const newColumn: Column = {
+      id: generateId(),
+      boardId: currentBoardId,
+      name: name.trim(),
+      order: maxOrder + 1,
+    };
+
+    await db.columns.add(newColumn);
+    await loadBoardData(currentBoardId);
+
+    return newColumn;
+  }, [currentBoardId, loadBoardData]);
+
   return {
     boardData,
     allBoards,
@@ -372,5 +488,8 @@ export function useDbBoard() {
     updateTaskTags,
     toggleTaskTag,
     updateColumnWipLimit,
+    renameColumn,
+    addColumn,
+    reorderTasks,
   };
 }

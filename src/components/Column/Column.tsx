@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useDroppable } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import type { Column, Task } from '../../stores/db';
 import { TaskCard } from '../TaskCard/TaskCard';
 import './Column.css';
@@ -11,15 +12,19 @@ interface ColumnProps {
   onUpdateTask: (taskId: string, newTitle: string) => void;
   onTaskClick: (task: Task) => void;
   onUpdateWipLimit?: (columnId: string, wipLimit: number | undefined) => void;
+  onRenameColumn?: (columnId: string, name: string) => void;
 }
 
-export function Column({ column, onAddTask, onDeleteTask, onUpdateTask, onTaskClick, onUpdateWipLimit }: ColumnProps) {
+export function Column({ column, onAddTask, onDeleteTask, onUpdateTask, onTaskClick, onUpdateWipLimit, onRenameColumn }: ColumnProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [isSettingWip, setIsSettingWip] = useState(false);
   const [wipValue, setWipValue] = useState(column.wipLimit?.toString() || '');
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [editTitle, setEditTitle] = useState(column.name);
   const inputRef = useRef<HTMLInputElement>(null);
   const wipInputRef = useRef<HTMLInputElement>(null);
+  const titleInputRef = useRef<HTMLInputElement>(null);
 
   const { setNodeRef, isOver } = useDroppable({
     id: column.id,
@@ -43,6 +48,38 @@ export function Column({ column, onAddTask, onDeleteTask, onUpdateTask, onTaskCl
       wipInputRef.current.select();
     }
   }, [isSettingWip]);
+
+  useEffect(() => {
+    if (isEditingTitle && titleInputRef.current) {
+      titleInputRef.current.focus();
+      titleInputRef.current.select();
+    }
+  }, [isEditingTitle]);
+
+  // 列名编辑处理
+  const handleTitleDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onRenameColumn) {
+      setIsEditingTitle(true);
+      setEditTitle(column.name);
+    }
+  };
+
+  const handleTitleSave = () => {
+    if (editTitle.trim() && onRenameColumn) {
+      onRenameColumn(column.id, editTitle);
+    }
+    setIsEditingTitle(false);
+  };
+
+  const handleTitleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleTitleSave();
+    } else if (e.key === 'Escape') {
+      setEditTitle(column.name);
+      setIsEditingTitle(false);
+    }
+  };
 
   const handleAddTask = () => {
     if (newTaskTitle.trim()) {
@@ -97,7 +134,25 @@ export function Column({ column, onAddTask, onDeleteTask, onUpdateTask, onTaskCl
     >
       <div className="column-header">
         <div className="column-header-left">
-          <h3 className="column-title">{column.name}</h3>
+          {isEditingTitle ? (
+            <input
+              ref={titleInputRef}
+              type="text"
+              className="column-title-edit-input"
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+              onBlur={handleTitleSave}
+              onKeyDown={handleTitleKeyDown}
+            />
+          ) : (
+            <h3
+              className="column-title"
+              onDoubleClick={handleTitleDoubleClick}
+              title="双击编辑列名"
+            >
+              {column.name}
+            </h3>
+          )}
           <span className={`task-count ${isOverWip ? 'over-wip' : ''}`}>
             {taskCount}{wipLimit !== undefined && `/${wipLimit}`}
           </span>
@@ -141,15 +196,20 @@ export function Column({ column, onAddTask, onDeleteTask, onUpdateTask, onTaskCl
       )}
 
       <div className="column-content">
-        {column.tasks.map((task) => (
-          <TaskCard
-            key={task.id}
-            task={task}
-            onDelete={onDeleteTask}
-            onUpdate={onUpdateTask}
-            onClick={onTaskClick}
-          />
-        ))}
+        <SortableContext
+          items={column.tasks.map(t => t.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          {column.tasks.map((task) => (
+            <TaskCard
+              key={task.id}
+              task={task}
+              onDelete={onDeleteTask}
+              onUpdate={onUpdateTask}
+              onClick={onTaskClick}
+            />
+          ))}
+        </SortableContext>
         {isAdding && (
           <div className="add-task-form">
             <input

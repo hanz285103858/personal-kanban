@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { useState, useMemo, useRef, useEffect } from 'react';
+import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors, closestCorners } from '@dnd-kit/core';
 import type { DragStartEvent, DragEndEvent } from '@dnd-kit/core';
 import { useDbBoard } from '../../hooks/useDbBoard';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -26,7 +26,6 @@ export function Board() {
     addTask,
     deleteTask,
     updateTask,
-    moveTask,
     updateTaskDescription,
     updateTaskDueDate,
     updateTaskQuadrant,
@@ -35,11 +34,42 @@ export function Board() {
     toggleSubtask,
     deleteSubtask,
     updateColumnWipLimit,
+    renameColumn,
+    addColumn,
+    reorderTasks,
   } = useDbBoard();
   const { theme, toggleTheme } = useTheme();
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [showStats, setShowStats] = useState(false);
+  const [isAddingColumn, setIsAddingColumn] = useState(false);
+  const [newColumnName, setNewColumnName] = useState('');
+  const addColumnInputRef = useRef<HTMLInputElement>(null);
+
+  // 添加列输入框聚焦
+  useEffect(() => {
+    if (isAddingColumn && addColumnInputRef.current) {
+      addColumnInputRef.current.focus();
+    }
+  }, [isAddingColumn]);
+
+  // 添加列处理函数
+  const handleAddColumn = () => {
+    if (newColumnName.trim()) {
+      addColumn(newColumnName);
+      setNewColumnName('');
+      setIsAddingColumn(false);
+    }
+  };
+
+  const handleAddColumnKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleAddColumn();
+    } else if (e.key === 'Escape') {
+      setNewColumnName('');
+      setIsAddingColumn(false);
+    }
+  };
 
   // 搜索筛选状态
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -149,14 +179,30 @@ export function Board() {
     if (!over) return;
 
     const taskId = active.id as string;
-    const targetColumnId = over.id as string;
+    const overId = over.id as string;
 
-    const sourceColumn = boardData.columns.find((col) =>
-      col.tasks.some((t) => t.id === taskId)
-    );
+    // 找到目标任务列和位置
+    let targetColumnId: string | null = null;
+    let newOrder = 0;
 
-    if (sourceColumn && sourceColumn.id !== targetColumnId) {
-      moveTask(taskId, targetColumnId);
+    for (const column of boardData.columns) {
+      // 检查是否拖到列容器
+      if (column.id === overId) {
+        targetColumnId = column.id;
+        newOrder = column.tasks.length; // 添加到末尾
+        break;
+      }
+      // 检查是否拖到某个任务上
+      const taskIndex = column.tasks.findIndex(t => t.id === overId);
+      if (taskIndex !== -1) {
+        targetColumnId = column.id;
+        newOrder = taskIndex;
+        break;
+      }
+    }
+
+    if (targetColumnId) {
+      reorderTasks(taskId, targetColumnId, newOrder);
     }
   };
 
@@ -187,6 +233,7 @@ export function Board() {
   return (
     <DndContext
       sensors={sensors}
+      collisionDetection={closestCorners}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
@@ -246,8 +293,31 @@ export function Board() {
               onUpdateTask={updateTask}
               onTaskClick={handleTaskClick}
               onUpdateWipLimit={updateColumnWipLimit}
+              onRenameColumn={renameColumn}
             />
           ))}
+          {/* 添加列按钮 */}
+          {isAddingColumn ? (
+            <div className="add-column-form">
+              <input
+                ref={addColumnInputRef}
+                type="text"
+                className="add-column-input"
+                placeholder="输入列名称..."
+                value={newColumnName}
+                onChange={(e) => setNewColumnName(e.target.value)}
+                onBlur={handleAddColumn}
+                onKeyDown={handleAddColumnKeyDown}
+              />
+            </div>
+          ) : (
+            <button
+              className="add-column-btn"
+              onClick={() => setIsAddingColumn(true)}
+            >
+              + 添加列
+            </button>
+          )}
         </div>
       </div>
       <DragOverlay>
