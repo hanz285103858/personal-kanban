@@ -465,6 +465,35 @@ export function useDbBoard() {
     return newColumn;
   }, [currentBoardId, loadBoardData]);
 
+  // 重排序列
+  const reorderColumns = useCallback(async (
+    sourceId: string,
+    targetId: string
+  ) => {
+    if (!currentBoardId) return;
+
+    const columns = await db.columns
+      .where('boardId')
+      .equals(currentBoardId)
+      .sortBy('order');
+
+    const sourceIndex = columns.findIndex(c => c.id === sourceId);
+    const targetIndex = columns.findIndex(c => c.id === targetId);
+
+    if (sourceIndex === -1 || targetIndex === -1) return;
+
+    // 移动元素
+    const [removed] = columns.splice(sourceIndex, 1);
+    columns.splice(targetIndex, 0, removed);
+
+    // 批量更新 order
+    for (let i = 0; i < columns.length; i++) {
+      await db.columns.update(columns[i].id, { order: i });
+    }
+
+    await loadBoardData(currentBoardId);
+  }, [currentBoardId, loadBoardData]);
+
   return {
     boardData,
     allBoards,
@@ -490,6 +519,7 @@ export function useDbBoard() {
     updateColumnWipLimit,
     renameColumn,
     addColumn,
+    reorderColumns,
     reorderTasks,
   };
 }
