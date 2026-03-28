@@ -358,7 +358,7 @@ export function Board() {
       </div>
       <DragOverlay>
         {activeTask ? (
-          <div className="task-card dragging">
+          <div className="task-drag-preview">
             <span className="task-title">{activeTask.title}</span>
           </div>
         ) : activeColumn ? (

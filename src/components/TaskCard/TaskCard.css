@@ -213,3 +213,20 @@
   background: var(--primary);
   border-color: var(--primary);
 }
+
+/* 拖拽预览 (DragOverlay) */
+.task-drag-preview {
+  background: var(--bg-card);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-lg);
+  cursor: grabbing;
+  min-width: 250px;
+}
+
+.task-drag-preview .task-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
