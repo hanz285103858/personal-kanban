@@ -5,6 +5,7 @@ export interface Task {
   id: string;
   columnId: string;
   title: string;
+  description?: string;  // 任务描述/备注
   createdAt: Date;
 }
 

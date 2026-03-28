@@ -7,9 +7,10 @@ interface TaskCardProps {
   task: Task;
   onDelete: (taskId: string) => void;
   onUpdate: (taskId: string, newTitle: string) => void;
+  onClick: (task: Task) => void;
 }
 
-export function TaskCard({ task, onDelete, onUpdate }: TaskCardProps) {
+export function TaskCard({ task, onDelete, onUpdate, onClick }: TaskCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(task.title);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -58,6 +59,12 @@ export function TaskCard({ task, onDelete, onUpdate }: TaskCardProps) {
     onDelete(task.id);
   };
 
+  const handleClick = () => {
+    if (!isEditing) {
+      onClick(task);
+    }
+  };
+
   if (isEditing) {
     return (
       <div className="task-card editing">
@@ -80,10 +87,12 @@ export function TaskCard({ task, onDelete, onUpdate }: TaskCardProps) {
       style={style}
       className={`task-card ${isDragging ? 'dragging' : ''}`}
       onDoubleClick={handleDoubleClick}
+      onClick={handleClick}
       {...listeners}
       {...attributes}
     >
       <span className="task-title">{task.title}</span>
+      {task.description && <span className="has-description">☰</span>}
       <button className="delete-btn" onClick={handleDelete} title="删除任务">
         ×
       </button>

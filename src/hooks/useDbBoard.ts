@@ -104,6 +104,12 @@ export function useDbBoard() {
     await loadData();
   }, [loadData]);
 
+  // 更新任务描述
+  const updateTaskDescription = useCallback(async (taskId: string, description: string) => {
+    await db.tasks.update(taskId, { description });
+    await loadData();
+  }, [loadData]);
+
   return {
     boardData,
     loading,
@@ -111,5 +117,6 @@ export function useDbBoard() {
     deleteTask,
     updateTask,
     moveTask,
+    updateTaskDescription,
   };
 }

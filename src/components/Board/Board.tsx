@@ -3,12 +3,14 @@ import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@
 import type { DragStartEvent, DragEndEvent } from '@dnd-kit/core';
 import { useDbBoard } from '../../hooks/useDbBoard';
 import { Column } from '../Column/Column';
+import { TaskDetail } from '../TaskDetail/TaskDetail';
 import type { Task } from '../../stores/db';
 import './Board.css';
 
 export function Board() {
-  const { boardData, loading, addTask, deleteTask, updateTask, moveTask } = useDbBoard();
+  const { boardData, loading, addTask, deleteTask, updateTask, moveTask, updateTaskDescription } = useDbBoard();
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -53,6 +55,14 @@ export function Board() {
     }
   };
 
+  const handleTaskClick = (task: Task) => {
+    setSelectedTask(task);
+  };
+
+  const handleCloseDetail = () => {
+    setSelectedTask(null);
+  };
+
   if (loading) {
     return (
       <div className="board">
@@ -87,6 +97,7 @@ export function Board() {
               onAddTask={addTask}
               onDeleteTask={deleteTask}
               onUpdateTask={updateTask}
+              onTaskClick={handleTaskClick}
             />
           ))}
         </div>
@@ -98,6 +109,14 @@ export function Board() {
           </div>
         ) : null}
       </DragOverlay>
+      {selectedTask && (
+        <TaskDetail
+          task={selectedTask}
+          onClose={handleCloseDetail}
+          onUpdateTitle={updateTask}
+          onUpdateDescription={updateTaskDescription}
+        />
+      )}
     </DndContext>
   );
 }

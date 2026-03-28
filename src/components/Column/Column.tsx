@@ -9,9 +9,10 @@ interface ColumnProps {
   onAddTask: (columnId: string, title: string) => void;
   onDeleteTask: (taskId: string) => void;
   onUpdateTask: (taskId: string, newTitle: string) => void;
+  onTaskClick: (task: Task) => void;
 }
 
-export function Column({ column, onAddTask, onDeleteTask, onUpdateTask }: ColumnProps) {
+export function Column({ column, onAddTask, onDeleteTask, onUpdateTask, onTaskClick }: ColumnProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -59,6 +60,7 @@ export function Column({ column, onAddTask, onDeleteTask, onUpdateTask }: Column
             task={task}
             onDelete={onDeleteTask}
             onUpdate={onUpdateTask}
+            onClick={onTaskClick}
           />
         ))}
         {isAdding && (
