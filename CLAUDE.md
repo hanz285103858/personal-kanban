@@ -32,3 +32,27 @@ src/
 ## 开发方式
 
 增量式 Demo 驱动开发，每完成一个 Demo 需用户验证后再继续。每完成一个Demo，git提交代码，刷新**[TODOLIST.md](TODOLIST.md)**
+
+## Git 提交规范
+
+每次提交必须详细描述修改点：
+- 列出新增/修改/删除的文件
+- 说明每个文件的具体改动内容
+- 描述新增功能或修复的问题
+
+示例：
+```
+feat: 任务描述功能 - Demo 2.1
+
+新增功能:
+- 点击任务卡片打开详情弹窗
+- 支持编辑任务标题和描述
+
+新增文件:
+- src/components/TaskDetail/TaskDetail.tsx: 任务详情弹窗组件
+- src/components/TaskDetail/TaskDetail.css: 弹窗样式
+
+修改文件:
+- src/stores/db.ts: Task接口添加description字段
+- src/hooks/useDbBoard.ts: 新增updateTaskDescription方法
+```
