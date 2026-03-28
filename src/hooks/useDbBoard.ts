@@ -465,6 +465,32 @@ export function useDbBoard() {
     return newColumn;
   }, [currentBoardId, loadBoardData]);
 
+  // 删除列
+  const deleteColumn = useCallback(async (columnId: string) => {
+    if (!currentBoardId) return false;
+
+    // 检查列数，至少保留一列
+    const columns = await db.columns.where('boardId').equals(currentBoardId).toArray();
+    if (columns.length <= 1) {
+      alert('至少保留一个列');
+      return false;
+    }
+
+    // 删除该列下的所有任务
+    await db.tasks.where('columnId').equals(columnId).delete();
+    // 删除列
+    await db.columns.delete(columnId);
+
+    // 重新排序剩余列的 order
+    const remainingColumns = columns.filter(c => c.id !== columnId).sort((a, b) => a.order - b.order);
+    for (let i = 0; i < remainingColumns.length; i++) {
+      await db.columns.update(remainingColumns[i].id, { order: i });
+    }
+
+    await loadBoardData(currentBoardId);
+    return true;
+  }, [currentBoardId, loadBoardData]);
+
   // 重排序列
   const reorderColumns = useCallback(async (
     sourceId: string,
@@ -519,6 +545,7 @@ export function useDbBoard() {
     updateColumnWipLimit,
     renameColumn,
     addColumn,
+    deleteColumn,
     reorderColumns,
     reorderTasks,
   };

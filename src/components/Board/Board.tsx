@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
-import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors, closestCorners } from '@dnd-kit/core';
+import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors, closestCenter } from '@dnd-kit/core';
 import type { DragStartEvent, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDbBoard } from '../../hooks/useDbBoard';
@@ -38,6 +38,7 @@ export function Board() {
     updateColumnWipLimit,
     renameColumn,
     addColumn,
+    deleteColumn,
     reorderTasks,
     reorderColumns,
   } = useDbBoard();
@@ -257,7 +258,7 @@ export function Board() {
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCorners}
+      collisionDetection={closestCenter}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
@@ -323,6 +324,7 @@ export function Board() {
                 onTaskClick={handleTaskClick}
                 onUpdateWipLimit={updateColumnWipLimit}
                 onRenameColumn={renameColumn}
+                onDeleteColumn={deleteColumn}
               />
             ))}
           </SortableContext>

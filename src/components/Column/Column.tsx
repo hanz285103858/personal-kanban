@@ -15,9 +15,10 @@ interface ColumnProps {
   onTaskClick: (task: Task) => void;
   onUpdateWipLimit?: (columnId: string, wipLimit: number | undefined) => void;
   onRenameColumn?: (columnId: string, name: string) => void;
+  onDeleteColumn?: (columnId: string) => void;
 }
 
-export function Column({ column, isDraggable = false, onAddTask, onDeleteTask, onUpdateTask, onTaskClick, onUpdateWipLimit, onRenameColumn }: ColumnProps) {
+export function Column({ column, isDraggable = false, onAddTask, onDeleteTask, onUpdateTask, onTaskClick, onUpdateWipLimit, onRenameColumn, onDeleteColumn }: ColumnProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [isSettingWip, setIsSettingWip] = useState(false);
@@ -214,13 +215,28 @@ export function Column({ column, isDraggable = false, onAddTask, onDeleteTask, o
               )}
             </div>
           ) : (
-            <button
-              className="wip-setting-btn"
-              onClick={() => setIsSettingWip(true)}
-              title={wipLimit ? `WIP限制: ${wipLimit}` : '设置WIP限制'}
-            >
-              ⚙️
-            </button>
+            <>
+              <button
+                className="wip-setting-btn"
+                onClick={() => setIsSettingWip(true)}
+                title={wipLimit ? `WIP限制: ${wipLimit}` : '设置WIP限制'}
+              >
+                ⚙️
+              </button>
+              {onDeleteColumn && (
+                <button
+                  className="column-delete-btn"
+                  onClick={() => {
+                    if (confirm(`确定删除列 "${column.name}" 及其所有任务吗？`)) {
+                      onDeleteColumn(column.id);
+                    }
+                  }}
+                  title="删除列"
+                >
+                  🗑️
+                </button>
+              )}
+            </>
           )}
         </div>
       </div>
