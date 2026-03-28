@@ -64,21 +64,8 @@ src/
 - 列出新增/修改/删除的文件
 - 说明每个文件的具体改动内容
 - 描述新增功能或修复的问题
+- 推远端仓库
 
-示例：
-```
-feat: 列管理增强与任务排序功能 - Demo 4.4
-
-新增功能:
-- 双击列标题编辑列名
-- 添加新任务列
-- 同列内任务拖拽排序
-
-修改文件:
-- src/stores/db.ts: Task接口添加order字段，数据库升级到v3
-- src/hooks/useDbBoard.ts: 新增renameColumn、addColumn、reorderTasks方法
-- src/components/Board/Board.tsx: 添加列按钮UI，重构拖拽逻辑
-```
 
 ## 数据库版本
 
