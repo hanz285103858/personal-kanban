@@ -2,12 +2,16 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-bg);
+  transition: background 0.3s ease;
 }
 
 .board-header {
   padding: 20px 24px;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .board-title {
@@ -15,6 +19,25 @@
   font-size: 24px;
   font-weight: 700;
   color: white;
+}
+
+.theme-toggle-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
 }
 
 .board-columns {

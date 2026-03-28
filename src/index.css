@@ -5,6 +5,54 @@
   color-scheme: light;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* 浅色模式变量 */
+  --bg-primary: #f5f7fa;
+  --bg-secondary: #ebecf0;
+  --bg-card: #ffffff;
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+
+  --text-primary: #333333;
+  --text-secondary: #5e6c84;
+  --text-muted: #999999;
+
+  --border-color: #dfe1e6;
+  --border-focus: #667eea;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.3);
+
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  --danger-color: #e74c3c;
+  --warning-color: #f39c12;
+  --success-color: #2ecc71;
+  --info-color: #3498db;
+}
+
+/* 深色模式变量 */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --bg-card: #0f3460;
+  --bg-overlay: rgba(0, 0, 0, 0.7);
+
+  --text-primary: #e4e4e4;
+  --text-secondary: #a0a0a0;
+  --text-muted: #6c6c6c;
+
+  --border-color: #2d3748;
+  --border-focus: #667eea;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+
+  --gradient-bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
 }
 
 #root {
@@ -15,4 +63,7 @@
 body {
   margin: 0;
   padding: 0;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

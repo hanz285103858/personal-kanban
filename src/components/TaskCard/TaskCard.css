@@ -1,11 +1,11 @@
 .task-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: 8px;
   padding: 12px;
   margin-bottom: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-sm);
   cursor: pointer;
-  transition: box-shadow 0.2s, transform 0.2s;
+  transition: box-shadow 0.2s, transform 0.2s, background-color 0.3s ease;
   position: relative;
   display: flex;
   align-items: center;
@@ -13,18 +13,18 @@
 }
 
 .task-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
 
 .task-card.overdue {
-  background: #fff5f5;
-  border-left: 3px solid #e74c3c;
+  background: var(--bg-card);
+  border-left: 3px solid var(--danger-color);
 }
 
 .task-card.due-today {
-  background: #fffbeb;
-  border-left: 3px solid #f59e0b;
+  background: var(--bg-card);
+  border-left: 3px solid var(--warning-color);
 }
 
 .task-card.editing {
@@ -33,7 +33,7 @@
 
 .task-title {
   font-size: 14px;
-  color: #333;
+  color: var(--text-primary);
   flex: 1;
   word-break: break-word;
 }
