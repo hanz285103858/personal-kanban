@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { useSortable, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import type { Column, Task } from '../../stores/db';
 import { TaskCard } from '../TaskCard/TaskCard';
 import './Column.css';
@@ -16,7 +17,7 @@ interface ColumnProps {
   onRenameColumn?: (columnId: string, name: string) => void;
 }
 
-export function Column({ column, onAddTask, onDeleteTask, onUpdateTask, onTaskClick, onUpdateWipLimit, onRenameColumn }: ColumnProps) {
+export function Column({ column, isDraggable = false, onAddTask, onDeleteTask, onUpdateTask, onTaskClick, onUpdateWipLimit, onRenameColumn }: ColumnProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [isSettingWip, setIsSettingWip] = useState(false);
@@ -27,9 +28,32 @@ export function Column({ column, onAddTask, onDeleteTask, onUpdateTask, onTaskCl
   const wipInputRef = useRef<HTMLInputElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
 
-  const { setNodeRef, isOver } = useDroppable({
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setSortableNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: column.id,
+    disabled: !isDraggable,
+  });
+
+  const { setNodeRef: setDroppableRef, isOver } = useDroppable({
     id: column.id,
   });
+
+  // 合并 refs
+  const setNodeRef = (node: HTMLElement | null) => {
+    setSortableNodeRef(node);
+    setDroppableRef(node);
+  };
+
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   // WIP限制状态
   const taskCount = column.tasks.length;
@@ -131,10 +155,21 @@ export function Column({ column, onAddTask, onDeleteTask, onUpdateTask, onTaskCl
   return (
     <div
       ref={setNodeRef}
-      className={`column ${isOver ? 'drag-over' : ''} ${isOverWip ? 'over-wip' : ''}`}
+      style={style}
+      className={`column ${isDragging ? 'dragging' : ''} ${isOver ? 'drag-over' : ''} ${isOverWip ? 'over-wip' : ''}`}
     >
       <div className="column-header">
         <div className="column-header-left">
+          {isDraggable && (
+            <div
+              className="column-drag-handle"
+              {...attributes}
+              {...listeners}
+              title="拖拽调整列顺序"
+            >
+              ⋮⋮
+            </div>
+          )}
           {isEditingTitle ? (
             <input
               ref={titleInputRef}
