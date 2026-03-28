@@ -42,17 +42,11 @@ export function Board() {
     reorderColumns,
   } = useDbBoard();
 
-  // Temporary: Will be used in Task 3 for column drag-and-drop
-  void reorderColumns;
   void SortableContext;
   void horizontalListSortingStrategy;
   const { theme, toggleTheme } = useTheme();
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [activeColumn, setActiveColumn] = useState<ColumnType | null>(null);
-
-  // Temporary: Will be used in Task 3 for column drag-and-drop
-  void activeColumn;
-  void setActiveColumn;
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [showStats, setShowStats] = useState(false);
   const [isAddingColumn, setIsAddingColumn] = useState(false);
@@ -172,10 +166,18 @@ export function Board() {
     if (!boardData) return;
 
     const { active } = event;
-    const taskId = active.id as string;
+    const id = active.id as string;
 
-    for (const column of boardData.columns) {
-      const task = column.tasks.find((t) => t.id === taskId);
+    // 检查是否为列拖拽
+    const column = boardData.columns.find(c => c.id === id);
+    if (column) {
+      setActiveColumn(column);
+      return;
+    }
+
+    // 任务拖拽（现有逻辑）
+    for (const col of boardData.columns) {
+      const task = col.tasks.find((t) => t.id === id);
       if (task) {
         setActiveTask(task);
         break;
@@ -187,6 +189,17 @@ export function Board() {
     if (!boardData) return;
 
     const { active, over } = event;
+
+    // 列拖拽处理
+    if (activeColumn) {
+      setActiveColumn(null);
+      if (over && active.id !== over.id) {
+        reorderColumns(active.id as string, over.id as string);
+      }
+      return;
+    }
+
+    // 任务拖拽处理
     setActiveTask(null);
 
     if (!over) return;
