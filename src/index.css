@@ -1,58 +1,66 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&display=swap');
+
 :root {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* 浅色模式变量 */
-  --bg-primary: #f5f7fa;
-  --bg-secondary: #ebecf0;
-  --bg-card: #ffffff;
+  /* 浅色模式变量 - Productivity 配色 */
+  --bg-primary: #F0FDFA;
+  --bg-secondary: #E8F1F4;
+  --bg-card: #FFFFFF;
   --bg-overlay: rgba(0, 0, 0, 0.5);
 
-  --text-primary: #333333;
-  --text-secondary: #5e6c84;
-  --text-muted: #999999;
+  --text-primary: #134E4A;
+  --text-secondary: #0F172A;
+  --text-muted: #64748B;
 
-  --border-color: #dfe1e6;
-  --border-focus: #667eea;
+  --border-color: #99F6E4;
+  --border-focus: #0D9488;
 
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
-  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.3);
+  /* 主色调 */
+  --primary: #0D9488;
+  --primary-light: #14B8A6;
+  --accent: #EA580C;
 
-  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --shadow-sm: 0 1px 3px rgba(13, 78, 74, 0.08);
+  --shadow-md: 0 4px 12px rgba(13, 78, 74, 0.12);
+  --shadow-lg: 0 20px 60px rgba(13, 78, 74, 0.15);
 
-  --danger-color: #e74c3c;
-  --warning-color: #f39c12;
-  --success-color: #2ecc71;
-  --info-color: #3498db;
+  --gradient-primary: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%);
+  --gradient-bg: linear-gradient(135deg, #F0FDFA 0%, #CCFBF1 50%, #99F6E4 100%);
+
+  --danger-color: #DC2626;
+  --warning-color: #EA580C;
+  --success-color: #059669;
+  --info-color: #0891B2;
 }
 
 /* 深色模式变量 */
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --bg-primary: #1a1a2e;
-  --bg-secondary: #16213e;
-  --bg-card: #0f3460;
+  --bg-primary: #0F172A;
+  --bg-secondary: #1E293B;
+  --bg-card: #134E4A;
   --bg-overlay: rgba(0, 0, 0, 0.7);
 
-  --text-primary: #e4e4e4;
-  --text-secondary: #a0a0a0;
-  --text-muted: #6c6c6c;
+  --text-primary: #F0FDFA;
+  --text-secondary: #99F6E4;
+  --text-muted: #94A3B8;
 
-  --border-color: #2d3748;
-  --border-focus: #667eea;
+  --border-color: #0D9488;
+  --border-focus: #14B8A6;
 
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
 
-  --gradient-bg: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  --gradient-bg: linear-gradient(135deg, #0F172A 0%, #134E4A 50%, #0D9488 100%);
 }
 
 #root {
@@ -66,4 +74,9 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 标题使用 Outfit 字体 */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
 }

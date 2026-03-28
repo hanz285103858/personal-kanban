@@ -37,7 +37,7 @@
   font-size: 15px;
   font-weight: 600;
   font-family: inherit;
-  border: 2px solid #667eea;
+  border: 2px solid var(--border-focus);
   border-radius: 4px;
   padding: 2px 6px;
   outline: none;
@@ -65,7 +65,7 @@
 .add-task-btn {
   background: transparent;
   border: none;
-  color: #5e6c84;
+  color: var(--text-muted);
   padding: 12px 16px;
   text-align: left;
   cursor: pointer;
@@ -75,8 +75,8 @@
 }
 
 .add-task-btn:hover {
-  background: rgba(0, 0, 0, 0.04);
-  color: #333;
+  background: rgba(13, 148, 136, 0.08);
+  color: var(--text-primary);
 }
 
 .add-task-form {
@@ -85,22 +85,25 @@
 
 .add-task-input {
   width: 100%;
-  border: 2px solid #667eea;
+  border: 2px solid var(--border-focus);
   border-radius: 8px;
   padding: 10px 12px;
   font-size: 14px;
   outline: none;
   box-sizing: border-box;
   font-family: inherit;
+  background: var(--bg-card);
+  color: var(--text-primary);
 }
 
 .add-task-input:focus {
-  border-color: #764ba2;
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
 }
 
 .column.drag-over {
-  background: #d4d7dc;
-  box-shadow: 0 0 0 2px #667eea;
+  background: rgba(13, 148, 136, 0.1);
+  box-shadow: 0 0 0 2px var(--border-focus);
 }
 
 /* WIP限制样式 */
@@ -116,8 +119,8 @@
 }
 
 .task-count.over-wip {
-  background: #ffebee;
-  color: #e74c3c;
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--danger-color);
 }
 
 .wip-setting-btn {
@@ -143,50 +146,52 @@
 .wip-input {
   width: 50px;
   padding: 4px 8px;
-  border: 1px solid #dfe1e6;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 12px;
   outline: none;
+  background: var(--bg-card);
+  color: var(--text-primary);
 }
 
 .wip-input:focus {
-  border-color: #667eea;
+  border-color: var(--border-focus);
 }
 
 .wip-clear-btn {
-  background: #f5f5f5;
+  background: var(--bg-secondary);
   border: none;
   border-radius: 4px;
   font-size: 14px;
-  color: #666;
+  color: var(--text-muted);
   cursor: pointer;
   padding: 2px 6px;
 }
 
 .wip-clear-btn:hover {
-  background: #ffebee;
-  color: #e74c3c;
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--danger-color);
 }
 
 .wip-warning {
-  background: #fff3cd;
-  color: #856404;
+  background: rgba(234, 88, 12, 0.1);
+  color: var(--warning-color);
   font-size: 12px;
   padding: 6px 12px;
   text-align: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(234, 88, 12, 0.2);
 }
 
 .column.over-wip {
-  box-shadow: 0 0 0 2px #f39c12;
+  box-shadow: 0 0 0 2px var(--warning-color);
 }
 
 .add-task-btn.disabled {
-  color: #999;
+  color: var(--text-muted);
   cursor: not-allowed;
 }
 
 .add-task-btn.disabled:hover {
   background: transparent;
-  color: #999;
+  color: var(--text-muted);
 }
