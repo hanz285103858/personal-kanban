@@ -192,6 +192,12 @@ export function useDbBoard() {
     await loadData();
   }, [loadData]);
 
+  // 更新列WIP限制
+  const updateColumnWipLimit = useCallback(async (columnId: string, wipLimit: number | undefined) => {
+    await db.columns.update(columnId, { wipLimit });
+    await loadData();
+  }, [loadData]);
+
   return {
     boardData,
     loading,
@@ -208,5 +214,6 @@ export function useDbBoard() {
     updateTaskQuadrant,
     updateTaskTags,
     toggleTaskTag,
+    updateColumnWipLimit,
   };
 }

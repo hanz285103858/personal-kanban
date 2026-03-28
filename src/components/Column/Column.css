@@ -79,3 +79,91 @@
   background: #d4d7dc;
   box-shadow: 0 0 0 2px #667eea;
 }
+
+/* WIP限制样式 */
+.column-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.column-header-right {
+  display: flex;
+  align-items: center;
+}
+
+.task-count.over-wip {
+  background: #ffebee;
+  color: #e74c3c;
+}
+
+.wip-setting-btn {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.wip-setting-btn:hover {
+  opacity: 1;
+}
+
+.wip-setting {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.wip-input {
+  width: 50px;
+  padding: 4px 8px;
+  border: 1px solid #dfe1e6;
+  border-radius: 4px;
+  font-size: 12px;
+  outline: none;
+}
+
+.wip-input:focus {
+  border-color: #667eea;
+}
+
+.wip-clear-btn {
+  background: #f5f5f5;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
+.wip-clear-btn:hover {
+  background: #ffebee;
+  color: #e74c3c;
+}
+
+.wip-warning {
+  background: #fff3cd;
+  color: #856404;
+  font-size: 12px;
+  padding: 6px 12px;
+  text-align: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.column.over-wip {
+  box-shadow: 0 0 0 2px #f39c12;
+}
+
+.add-task-btn.disabled {
+  color: #999;
+  cursor: not-allowed;
+}
+
+.add-task-btn.disabled:hover {
+  background: transparent;
+  color: #999;
+}

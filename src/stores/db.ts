@@ -47,6 +47,7 @@ export interface Column {
   id: string;
   name: string;
   order: number;
+  wipLimit?: number;  // WIP限制（最大任务数）
 }
 
 // 看板类型
