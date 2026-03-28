@@ -194,7 +194,8 @@ export function Board() {
       if (over && active.id !== over.id) {
         await reorderColumns(active.id as string, over.id as string);
       }
-      setActiveColumn(null);
+      // 等待 React 完成渲染后再清除状态
+      requestAnimationFrame(() => setActiveColumn(null));
       return;
     }
 
@@ -230,7 +231,8 @@ export function Board() {
     if (targetColumnId) {
       await reorderTasks(taskId, targetColumnId, newOrder);
     }
-    setActiveTask(null);
+    // 等待 React 完成渲染后再清除状态
+    requestAnimationFrame(() => setActiveTask(null));
   };
 
   const handleTaskClick = (task: Task) => {
