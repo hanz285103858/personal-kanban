@@ -45,6 +45,7 @@ export interface Task {
 // 列类型
 export interface Column {
   id: string;
+  boardId: string;  // 所属看板ID
   name: string;
   order: number;
   wipLimit?: number;  // WIP限制（最大任务数）
@@ -54,6 +55,8 @@ export interface Column {
 export interface Board {
   id: string;
   name: string;
+  order: number;  // 看板排序
+  createdAt: Date;
 }
 
 // 数据库定义
@@ -63,10 +66,18 @@ const db = new Dexie('PersonalKanbanDB') as Dexie & {
   tasks: EntityTable<Task, 'id'>;
 };
 
-db.version(1).stores({
-  boards: 'id, name',
-  columns: 'id, order',
+db.version(2).stores({
+  boards: 'id, name, order',
+  columns: 'id, boardId, order',
   tasks: 'id, columnId',
+}).upgrade(async (tx) => {
+  // 迁移现有数据，为列添加 boardId
+  const columns = await tx.table('columns').toArray();
+  for (const col of columns) {
+    if (!col.boardId) {
+      await tx.table('columns').update(col.id, { boardId: 'board-1' });
+    }
+  }
 });
 
 export { db };

@@ -6,11 +6,33 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { Column } from '../Column/Column';
 import { TaskDetail } from '../TaskDetail/TaskDetail';
 import { SearchFilter } from '../SearchFilter/SearchFilter';
+import { BoardSelector } from '../BoardSelector/BoardSelector';
 import type { Task, Quadrant } from '../../stores/db';
 import './Board.css';
 
 export function Board() {
-  const { boardData, loading, addTask, deleteTask, updateTask, moveTask, updateTaskDescription, updateTaskDueDate, updateTaskQuadrant, toggleTaskTag, addSubtask, toggleSubtask, deleteSubtask, updateColumnWipLimit } = useDbBoard();
+  const {
+    boardData,
+    allBoards,
+    currentBoardId,
+    loading,
+    switchBoard,
+    createBoard,
+    deleteBoard,
+    renameBoard,
+    addTask,
+    deleteTask,
+    updateTask,
+    moveTask,
+    updateTaskDescription,
+    updateTaskDueDate,
+    updateTaskQuadrant,
+    toggleTaskTag,
+    addSubtask,
+    toggleSubtask,
+    deleteSubtask,
+    updateColumnWipLimit,
+  } = useDbBoard();
   const { theme, toggleTheme } = useTheme();
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -160,7 +182,14 @@ export function Board() {
     >
       <div className="board">
         <div className="board-header">
-          <h1 className="board-title">{boardData.board.name}</h1>
+          <BoardSelector
+            boards={allBoards}
+            currentBoardId={currentBoardId}
+            onSelectBoard={switchBoard}
+            onCreateBoard={createBoard}
+            onDeleteBoard={deleteBoard}
+            onRenameBoard={renameBoard}
+          />
           <button
             className="theme-toggle-btn"
             onClick={toggleTheme}
