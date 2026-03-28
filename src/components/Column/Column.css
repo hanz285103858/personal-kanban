@@ -261,8 +261,7 @@
 
 /* 列拖拽中状态 */
 .column.dragging {
-  opacity: 0.5;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  opacity: 0;
 }
 
 /* 列拖拽预览 (DragOverlay) */
