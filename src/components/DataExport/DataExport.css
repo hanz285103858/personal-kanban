@@ -1,0 +1,53 @@
+.data-export {
+  display: flex;
+  gap: 8px;
+}
+
+.export-btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.export-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.json-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.json-btn:hover {
+  background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
+}
+
+.csv-btn {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+}
+
+.csv-btn:hover {
+  background: linear-gradient(135deg, #0f8a80 0%, #32d970 100%);
+}
+
+/* 深色模式 */
+[data-theme="dark"] .export-btn {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .json-btn {
+  background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
+}
+
+[data-theme="dark"] .csv-btn {
+  background: linear-gradient(135deg, #0f8a80 0%, #32d970 100%);
+}

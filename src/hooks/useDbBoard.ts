@@ -72,7 +72,8 @@ export function useDbBoard() {
   useEffect(() => {
     const init = async () => {
       try {
-        let boards = await loadAllBoards();
+        // 尝试获取所有看板
+        let boards = await db.boards.toArray();
 
         // 如果没有看板，创建默认看板
         if (boards.length === 0) {
@@ -85,7 +86,7 @@ export function useDbBoard() {
           await db.boards.add(defaultBoard);
           await db.columns.bulkAdd(getDefaultColumns(defaultBoard.id));
           await db.tasks.bulkAdd(getDefaultTasks(defaultBoard.id));
-          boards = await loadAllBoards();
+          boards = [defaultBoard];
         }
 
         // 获取当前看板ID
@@ -96,15 +97,35 @@ export function useDbBoard() {
 
         setCurrentBoardId(targetBoardId);
         await loadBoardData(targetBoardId);
+        setAllBoards(boards);
       } catch (error) {
         console.error('Failed to initialize:', error);
+        // 如果初始化失败，尝试重置数据库
+        try {
+          await db.delete();
+          await db.open();
+          const defaultBoard: Board = {
+            id: 'board-1',
+            name: '我的看板',
+            order: 0,
+            createdAt: new Date(),
+          };
+          await db.boards.add(defaultBoard);
+          await db.columns.bulkAdd(getDefaultColumns(defaultBoard.id));
+          await db.tasks.bulkAdd(getDefaultTasks(defaultBoard.id));
+          setCurrentBoardId(defaultBoard.id);
+          await loadBoardData(defaultBoard.id);
+          setAllBoards([defaultBoard]);
+        } catch (resetError) {
+          console.error('Failed to reset database:', resetError);
+        }
       } finally {
         setLoading(false);
       }
     };
 
     init();
-  }, [loadAllBoards, loadBoardData]);
+  }, [loadBoardData]);
 
   // 切换看板
   const switchBoard = useCallback(async (boardId: string) => {

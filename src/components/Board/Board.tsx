@@ -7,7 +7,10 @@ import { Column } from '../Column/Column';
 import { TaskDetail } from '../TaskDetail/TaskDetail';
 import { SearchFilter } from '../SearchFilter/SearchFilter';
 import { BoardSelector } from '../BoardSelector/BoardSelector';
+import { StatisticsPanel } from '../StatisticsPanel/StatisticsPanel';
+import { DataExport } from '../DataExport/DataExport';
 import type { Task, Quadrant } from '../../stores/db';
+import { PRESET_TAGS } from '../../stores/db';
 import './Board.css';
 
 export function Board() {
@@ -36,6 +39,7 @@ export function Board() {
   const { theme, toggleTheme } = useTheme();
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [showStats, setShowStats] = useState(false);
 
   // 搜索筛选状态
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -106,6 +110,12 @@ export function Board() {
     setFilterQuadrant(undefined);
     setFilterDueDate(undefined);
   };
+
+  // 获取所有任务用于统计
+  const allTasks = useMemo(() => {
+    if (!boardData) return [];
+    return boardData.columns.flatMap(col => col.tasks);
+  }, [boardData]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -190,13 +200,28 @@ export function Board() {
             onDeleteBoard={deleteBoard}
             onRenameBoard={renameBoard}
           />
-          <button
-            className="theme-toggle-btn"
-            onClick={toggleTheme}
-            title={theme === 'light' ? '切换到深色模式' : '切换到浅色模式'}
-          >
-            {theme === 'light' ? '🌙' : '☀️'}
-          </button>
+          <div className="board-header-actions">
+            <DataExport
+              board={boardData.board}
+              columns={boardData.columns}
+              tasks={allTasks}
+              tags={PRESET_TAGS}
+            />
+            <button
+              className="stats-btn"
+              onClick={() => setShowStats(true)}
+              title="查看统计"
+            >
+              📊
+            </button>
+            <button
+              className="theme-toggle-btn"
+              onClick={toggleTheme}
+              title={theme === 'light' ? '切换到深色模式' : '切换到浅色模式'}
+            >
+              {theme === 'light' ? '🌙' : '☀️'}
+            </button>
+          </div>
         </div>
 
         <SearchFilter
@@ -245,6 +270,12 @@ export function Board() {
           onAddSubtask={addSubtask}
           onToggleSubtask={toggleSubtask}
           onDeleteSubtask={deleteSubtask}
+        />
+      )}
+      {showStats && (
+        <StatisticsPanel
+          tasks={allTasks}
+          onClose={() => setShowStats(false)}
         />
       )}
     </DndContext>

@@ -1,0 +1,392 @@
+.stats-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.stats-panel {
+  background: var(--bg-card);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--gradient-primary);
+}
+
+.stats-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: white;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.stats-time-range {
+  display: flex;
+  gap: 8px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.range-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: 2px solid var(--border-color);
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.range-btn:hover {
+  border-color: var(--primary-color, #667eea);
+  color: var(--primary-color, #667eea);
+}
+
+.range-btn.active {
+  background: var(--gradient-primary);
+  border-color: transparent;
+  color: white;
+}
+
+.stats-content {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* 概览卡片 */
+.stats-overview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.overview-card {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.overview-icon {
+  font-size: 28px;
+}
+
+.overview-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.overview-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.overview-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* 统计区块 */
+.stats-section {
+  margin-bottom: 24px;
+}
+
+.stats-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* 趋势图 */
+.trend-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 120px;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+}
+
+.trend-bar-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.trend-bar {
+  width: 100%;
+  min-height: 4px;
+  background: var(--gradient-primary);
+  border-radius: 4px 4px 0 0;
+  position: relative;
+  transition: height 0.3s ease;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.bar-value {
+  position: absolute;
+  top: -18px;
+  font-size: 10px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.bar-label {
+  margin-top: 4px;
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+/* 四象限图表 */
+.quadrant-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quadrant-item {
+  background: var(--bg-secondary);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.quadrant-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.quadrant-icon {
+  font-size: 16px;
+}
+
+.quadrant-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.quadrant-bar-bg {
+  height: 8px;
+  background: var(--bg-primary);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.quadrant-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.quadrant-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.quadrant-count {
+  color: var(--text-secondary);
+}
+
+.quadrant-percent {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* 标签统计 */
+.tag-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tag-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+}
+
+.tag-stat-name {
+  width: 60px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+
+.tag-stat-bar-bg {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-primary);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.tag-stat-bar {
+  height: 100%;
+  background: var(--gradient-primary);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.tag-stat-count {
+  width: 30px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* 子任务统计 */
+.subtask-stats {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 20px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+}
+
+.subtask-progress-ring {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.subtask-progress-ring svg {
+  transform: rotate(-90deg);
+}
+
+.progress-bg {
+  fill: none;
+  stroke: var(--bg-primary);
+  stroke-width: 3;
+}
+
+.progress-fill {
+  fill: none;
+  stroke: #2ecc71;
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.5s ease;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.subtask-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.subtask-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.detail-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.subtask-detail-item.completed .detail-value {
+  color: #2ecc71;
+}
+
+.subtask-detail-item.pending .detail-value {
+  color: #f39c12;
+}
+
+/* 响应式 */
+@media (max-width: 480px) {
+  .stats-overview {
+    grid-template-columns: 1fr;
+  }
+
+  .overview-card {
+    padding: 12px;
+  }
+
+  .overview-value {
+    font-size: 20px;
+  }
+
+  .subtask-stats {
+    flex-direction: column;
+    text-align: center;
+  }
+}

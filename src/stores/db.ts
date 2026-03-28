@@ -75,7 +75,14 @@ db.version(2).stores({
   const columns = await tx.table('columns').toArray();
   for (const col of columns) {
     if (!col.boardId) {
-      await tx.table('columns').update(col.id, { boardId: 'board-1' });
+      await tx.table('columns').update(col.id, { boardId: 'board-1', order: col.order || 0 });
+    }
+  }
+  // 为现有的 Board 添加 order 和 createdAt 字段
+  const boards = await tx.table('boards').toArray();
+  for (const board of boards) {
+    if (board.order === undefined) {
+      await tx.table('boards').update(board.id, { order: 0, createdAt: new Date() });
     }
   }
 });
