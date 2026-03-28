@@ -42,8 +42,6 @@ export function Board() {
     reorderColumns,
   } = useDbBoard();
 
-  void SortableContext;
-  void horizontalListSortingStrategy;
   const { theme, toggleTheme } = useTheme();
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [activeColumn, setActiveColumn] = useState<ColumnType | null>(null);
@@ -310,18 +308,24 @@ export function Board() {
         />
 
         <div className="board-columns">
-          {filteredBoardData?.columns.map((column) => (
-            <Column
-              key={column.id}
-              column={column}
-              onAddTask={addTask}
-              onDeleteTask={deleteTask}
-              onUpdateTask={updateTask}
-              onTaskClick={handleTaskClick}
-              onUpdateWipLimit={updateColumnWipLimit}
-              onRenameColumn={renameColumn}
-            />
-          ))}
+          <SortableContext
+            items={filteredBoardData?.columns.map(c => c.id) || []}
+            strategy={horizontalListSortingStrategy}
+          >
+            {filteredBoardData?.columns.map((column) => (
+              <Column
+                key={column.id}
+                column={column}
+                isDraggable
+                onAddTask={addTask}
+                onDeleteTask={deleteTask}
+                onUpdateTask={updateTask}
+                onTaskClick={handleTaskClick}
+                onUpdateWipLimit={updateColumnWipLimit}
+                onRenameColumn={renameColumn}
+              />
+            ))}
+          </SortableContext>
           {/* 添加列按钮 */}
           {isAddingColumn ? (
             <div className="add-column-form">
@@ -350,6 +354,10 @@ export function Board() {
         {activeTask ? (
           <div className="task-card dragging">
             <span className="task-title">{activeTask.title}</span>
+          </div>
+        ) : activeColumn ? (
+          <div className="column-drag-preview">
+            <span>{activeColumn.name}</span>
           </div>
         ) : null}
       </DragOverlay>

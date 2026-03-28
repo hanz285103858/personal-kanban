@@ -7,6 +7,7 @@ import './Column.css';
 
 interface ColumnProps {
   column: Column & { tasks: Task[] };
+  isDraggable?: boolean;
   onAddTask: (columnId: string, title: string) => void;
   onDeleteTask: (taskId: string) => void;
   onUpdateTask: (taskId: string, newTitle: string) => void;
