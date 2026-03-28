@@ -191,17 +191,18 @@ export function Board() {
 
     // 列拖拽处理
     if (activeColumn) {
-      setActiveColumn(null);
       if (over && active.id !== over.id) {
         reorderColumns(active.id as string, over.id as string);
       }
+      setActiveColumn(null);
       return;
     }
 
     // 任务拖拽处理
-    setActiveTask(null);
-
-    if (!over) return;
+    if (!over) {
+      setActiveTask(null);
+      return;
+    }
 
     const taskId = active.id as string;
     const overId = over.id as string;
@@ -229,6 +230,7 @@ export function Board() {
     if (targetColumnId) {
       reorderTasks(taskId, targetColumnId, newOrder);
     }
+    setActiveTask(null);
   };
 
   const handleTaskClick = (task: Task) => {
