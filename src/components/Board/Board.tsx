@@ -184,7 +184,7 @@ export function Board() {
     }
   };
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = async (event: DragEndEvent) => {
     if (!boardData) return;
 
     const { active, over } = event;
@@ -192,7 +192,7 @@ export function Board() {
     // 列拖拽处理
     if (activeColumn) {
       if (over && active.id !== over.id) {
-        reorderColumns(active.id as string, over.id as string);
+        await reorderColumns(active.id as string, over.id as string);
       }
       setActiveColumn(null);
       return;
@@ -228,7 +228,7 @@ export function Board() {
     }
 
     if (targetColumnId) {
-      reorderTasks(taskId, targetColumnId, newOrder);
+      await reorderTasks(taskId, targetColumnId, newOrder);
     }
     setActiveTask(null);
   };
