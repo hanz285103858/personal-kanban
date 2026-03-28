@@ -8,7 +8,7 @@ import type { Task } from '../../stores/db';
 import './Board.css';
 
 export function Board() {
-  const { boardData, loading, addTask, deleteTask, updateTask, moveTask, updateTaskDescription, updateTaskDueDate, updateTaskQuadrant, addSubtask, toggleSubtask, deleteSubtask } = useDbBoard();
+  const { boardData, loading, addTask, deleteTask, updateTask, moveTask, updateTaskDescription, updateTaskDueDate, updateTaskQuadrant, toggleTaskTag, addSubtask, toggleSubtask, deleteSubtask } = useDbBoard();
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
@@ -118,6 +118,7 @@ export function Board() {
           onUpdateDescription={updateTaskDescription}
           onUpdateDueDate={updateTaskDueDate}
           onUpdateQuadrant={updateTaskQuadrant}
+          onToggleTag={toggleTaskTag}
           onAddSubtask={addSubtask}
           onToggleSubtask={toggleSubtask}
           onDeleteSubtask={deleteSubtask}

@@ -172,6 +172,26 @@ export function useDbBoard() {
     await loadData();
   }, [loadData]);
 
+  // 更新任务标签
+  const updateTaskTags = useCallback(async (taskId: string, tags: string[]) => {
+    await db.tasks.update(taskId, { tags });
+    await loadData();
+  }, [loadData]);
+
+  // 切换任务标签
+  const toggleTaskTag = useCallback(async (taskId: string, tagId: string) => {
+    const task = await db.tasks.get(taskId);
+    if (!task) return;
+
+    const currentTags = task.tags || [];
+    const newTags = currentTags.includes(tagId)
+      ? currentTags.filter(id => id !== tagId)
+      : [...currentTags, tagId];
+
+    await db.tasks.update(taskId, { tags: newTags });
+    await loadData();
+  }, [loadData]);
+
   return {
     boardData,
     loading,
@@ -186,5 +206,7 @@ export function useDbBoard() {
     deleteSubtask,
     updateSubtaskTitle,
     updateTaskQuadrant,
+    updateTaskTags,
+    toggleTaskTag,
   };
 }

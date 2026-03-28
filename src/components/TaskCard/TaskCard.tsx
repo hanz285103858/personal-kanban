@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import type { Task, Quadrant } from '../../stores/db';
+import { PRESET_TAGS } from '../../stores/db';
 import './TaskCard.css';
 
 interface TaskCardProps {
@@ -107,6 +108,11 @@ export function TaskCard({ task, onDelete, onUpdate, onClick }: TaskCardProps) {
   const quadrant = task.quadrant;
   const quadrantInfo = quadrant ? quadrantConfig[quadrant] : null;
 
+  // 获取标签信息
+  const taskTags = (task.tags || [])
+    .map(tagId => PRESET_TAGS.find(t => t.id === tagId))
+    .filter(Boolean);
+
   if (isEditing) {
     return (
       <div className="task-card editing">
@@ -147,6 +153,19 @@ export function TaskCard({ task, onDelete, onUpdate, onClick }: TaskCardProps) {
             </span>
           )}
         </div>
+        {taskTags.length > 0 && (
+          <div className="task-tags">
+            {taskTags.map(tag => tag && (
+              <span
+                key={tag.id}
+                className="task-tag"
+                style={{ backgroundColor: `${tag.color}20`, color: tag.color }}
+              >
+                {tag.name}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
       <div className="task-icons">
         {quadrantInfo && (

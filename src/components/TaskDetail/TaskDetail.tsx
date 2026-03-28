@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Task, Quadrant } from '../../stores/db';
+import { PRESET_TAGS } from '../../stores/db';
 import './TaskDetail.css';
 
 interface TaskDetailProps {
@@ -9,6 +10,7 @@ interface TaskDetailProps {
   onUpdateDescription: (taskId: string, description: string) => void;
   onUpdateDueDate: (taskId: string, dueDate: string | undefined) => void;
   onUpdateQuadrant: (taskId: string, quadrant: Quadrant | undefined) => void;
+  onToggleTag: (taskId: string, tagId: string) => void;
   onAddSubtask: (taskId: string, title: string) => void;
   onToggleSubtask: (taskId: string, subtaskId: string) => void;
   onDeleteSubtask: (taskId: string, subtaskId: string) => void;
@@ -22,12 +24,15 @@ const quadrantOptions: { value: Quadrant; label: string; color: string; icon: st
   { value: 'not-urgent-not-important', label: '不重要不紧急', color: '#95a5a6', icon: '📝' },
 ];
 
-export function TaskDetail({ task, onClose, onUpdateTitle, onUpdateDescription, onUpdateDueDate, onUpdateQuadrant, onAddSubtask, onToggleSubtask, onDeleteSubtask }: TaskDetailProps) {
+export function TaskDetail({ task, onClose, onUpdateTitle, onUpdateDescription, onUpdateDueDate, onUpdateQuadrant, onToggleTag, onAddSubtask, onToggleSubtask, onDeleteSubtask }: TaskDetailProps) {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description || '');
   const [dueDate, setDueDate] = useState(task.dueDate || '');
   const [quadrant, setQuadrant] = useState<Quadrant | undefined>(task.quadrant);
   const [newSubtask, setNewSubtask] = useState('');
+
+  // 获取当前任务的标签
+  const taskTags = task.tags || [];
 
   const handleTitleBlur = () => {
     if (title.trim() && title !== task.title) {
@@ -153,6 +158,30 @@ export function TaskDetail({ task, onClose, onUpdateTitle, onUpdateDescription, 
                 <span className="quadrant-label" style={{ color: quadrant === option.value ? option.color : '#666' }}>
                   {option.label}
                 </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="task-detail-section">
+          <h3 className="section-title">标签</h3>
+          <div className="tag-selector">
+            {PRESET_TAGS.map((tag) => (
+              <button
+                key={tag.id}
+                className={`tag-btn ${taskTags.includes(tag.id) ? 'active' : ''}`}
+                onClick={() => onToggleTag(task.id, tag.id)}
+                style={{
+                  borderColor: taskTags.includes(tag.id) ? tag.color : '#dfe1e6',
+                  backgroundColor: taskTags.includes(tag.id) ? `${tag.color}20` : 'white',
+                  color: taskTags.includes(tag.id) ? tag.color : '#666',
+                }}
+              >
+                <span
+                  className="tag-dot"
+                  style={{ backgroundColor: tag.color }}
+                />
+                {tag.name}
               </button>
             ))}
           </div>
