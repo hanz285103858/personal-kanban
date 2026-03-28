@@ -1,6 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors, closestCorners } from '@dnd-kit/core';
 import type { DragStartEvent, DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDbBoard } from '../../hooks/useDbBoard';
 import { useTheme } from '../../contexts/ThemeContext';
 import { Column } from '../Column/Column';
@@ -10,6 +11,7 @@ import { BoardSelector } from '../BoardSelector/BoardSelector';
 import { StatisticsPanel } from '../StatisticsPanel/StatisticsPanel';
 import { DataExport } from '../DataExport/DataExport';
 import type { Task, Quadrant } from '../../stores/db';
+import type { Column as ColumnType } from '../../stores/db';
 import { PRESET_TAGS } from '../../stores/db';
 import './Board.css';
 
@@ -37,9 +39,20 @@ export function Board() {
     renameColumn,
     addColumn,
     reorderTasks,
+    reorderColumns,
   } = useDbBoard();
+
+  // Temporary: Will be used in Task 3 for column drag-and-drop
+  void reorderColumns;
+  void SortableContext;
+  void horizontalListSortingStrategy;
   const { theme, toggleTheme } = useTheme();
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [activeColumn, setActiveColumn] = useState<ColumnType | null>(null);
+
+  // Temporary: Will be used in Task 3 for column drag-and-drop
+  void activeColumn;
+  void setActiveColumn;
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [showStats, setShowStats] = useState(false);
   const [isAddingColumn, setIsAddingColumn] = useState(false);
