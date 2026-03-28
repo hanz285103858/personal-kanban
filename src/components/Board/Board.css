@@ -2,16 +2,18 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--gradient-bg);
-  transition: background 0.3s ease;
+  background: var(--bg-primary);
+  transition: background var(--transition-slow);
 }
 
 .board-header {
-  padding: 20px 24px;
+  padding: 20px 28px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .board-title {
@@ -19,61 +21,100 @@
   font-size: 24px;
   font-weight: 700;
   color: var(--text-primary);
-}
-
-.theme-toggle-btn {
-  background: rgba(13, 148, 136, 0.15);
-  border: 1px solid rgba(13, 148, 136, 0.3);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  color: var(--text-primary);
-}
-
-.theme-toggle-btn:hover {
-  background: rgba(13, 148, 136, 0.25);
-  transform: scale(1.1);
+  letter-spacing: -0.02em;
 }
 
 .board-header-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
-.stats-btn {
-  background: rgba(13, 148, 136, 0.15);
-  border: 1px solid rgba(13, 148, 136, 0.3);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
+/* Icon Button Base Style */
+.icon-btn {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  width: 42px;
+  height: 42px;
+  font-size: 18px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
-  color: var(--text-primary);
+  transition: all var(--transition-fast);
+  color: var(--text-secondary);
 }
 
+.icon-btn:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.icon-btn:active {
+  transform: translateY(0);
+}
+
+/* Legacy class names for compatibility */
+.theme-toggle-btn,
+.stats-btn {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  width: 42px;
+  height: 42px;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  color: var(--text-secondary);
+}
+
+.theme-toggle-btn:hover,
 .stats-btn:hover {
-  background: rgba(13, 148, 136, 0.25);
-  transform: scale(1.1);
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.theme-toggle-btn:active,
+.stats-btn:active {
+  transform: translateY(0);
 }
 
 .board-columns {
   flex: 1;
   display: flex;
-  gap: 16px;
-  padding: 0 24px 24px;
+  gap: 20px;
+  padding: 24px 28px;
   overflow-x: auto;
   align-items: flex-start;
+}
+
+/* Scrollbar styling */
+.board-columns::-webkit-scrollbar {
+  height: 8px;
+}
+
+.board-columns::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
+}
+
+.board-columns::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: var(--radius-full);
+}
+
+.board-columns::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }
 
 .loading {
@@ -81,30 +122,35 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: var(--text-primary);
-  font-size: 18px;
+  color: var(--text-secondary);
+  font-size: 16px;
 }
 
-/* 添加列按钮 */
+/* Add Column Button */
 .add-column-btn {
   min-width: 280px;
   max-width: 280px;
   height: fit-content;
-  background: rgba(13, 148, 136, 0.08);
-  border: 2px dashed rgba(13, 148, 136, 0.3);
-  border-radius: 12px;
-  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  padding: 20px;
-  transition: all 0.2s;
+  padding: 24px;
+  transition: all var(--transition-fast);
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .add-column-btn:hover {
-  background: rgba(13, 148, 136, 0.15);
-  border-color: rgba(13, 148, 136, 0.5);
-  color: var(--text-primary);
+  background: var(--bg-card);
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .add-column-form {
@@ -116,28 +162,22 @@
 .add-column-input {
   width: 100%;
   box-sizing: border-box;
-  padding: 12px 16px;
-  border: 2px solid var(--border-focus);
-  border-radius: 12px;
+  padding: 14px 16px;
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-lg);
   font-size: 14px;
+  font-weight: 500;
   font-family: inherit;
   outline: none;
   background: var(--bg-card);
   color: var(--text-primary);
+  transition: box-shadow var(--transition-fast);
 }
 
 .add-column-input:focus {
-  border-color: var(--primary-light);
-  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
 }
 
-/* 深色模式下的添加列按钮 */
-[data-theme="dark"] .add-column-btn {
-  background: rgba(20, 184, 166, 0.08);
-  border-color: rgba(20, 184, 166, 0.25);
-}
-
-[data-theme="dark"] .add-column-btn:hover {
-  background: rgba(20, 184, 166, 0.15);
-  border-color: rgba(20, 184, 166, 0.4);
+.add-column-input::placeholder {
+  color: var(--text-muted);
 }

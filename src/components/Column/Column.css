@@ -1,21 +1,33 @@
 .column {
   background: var(--bg-secondary);
-  border-radius: 12px;
-  min-width: 280px;
-  max-width: 280px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  min-width: 300px;
+  max-width: 300px;
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 100px);
-  transition: background-color 0.3s ease;
+  max-height: calc(100vh - 120px);
+  transition: all var(--transition-fast);
 }
 
 .column-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
+  padding: 16px 18px;
   border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
+}
+
+.column-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.column-header-right {
+  display: flex;
+  align-items: center;
 }
 
 .column-title {
@@ -24,9 +36,9 @@
   font-weight: 600;
   color: var(--text-primary);
   cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 4px;
-  transition: background-color 0.2s;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
 }
 
 .column-title:hover {
@@ -37,9 +49,9 @@
   font-size: 15px;
   font-weight: 600;
   font-family: inherit;
-  border: 2px solid var(--border-focus);
-  border-radius: 4px;
-  padding: 2px 6px;
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
   outline: none;
   background: var(--bg-card);
   color: var(--text-primary);
@@ -52,85 +64,118 @@
   color: var(--text-secondary);
   font-size: 12px;
   font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 12px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+}
+
+.task-count.over-wip {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+  border-color: transparent;
 }
 
 .column-content {
   flex: 1;
   overflow-y: auto;
-  padding: 8px;
+  padding: 12px;
 }
 
+/* Scrollbar styling */
+.column-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.column-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.column-content::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: var(--radius-full);
+}
+
+.column-content::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Add Task Button */
 .add-task-btn {
   background: transparent;
   border: none;
   color: var(--text-muted);
-  padding: 12px 16px;
+  padding: 14px 18px;
   text-align: left;
   cursor: pointer;
   font-size: 14px;
-  border-radius: 0 0 12px 12px;
-  transition: background 0.2s, color 0.2s;
-}
-
-.add-task-btn:hover {
-  background: rgba(13, 148, 136, 0.08);
-  color: var(--text-primary);
-}
-
-.add-task-form {
-  margin-bottom: 8px;
-}
-
-.add-task-input {
-  width: 100%;
-  border: 2px solid var(--border-focus);
-  border-radius: 8px;
-  padding: 10px 12px;
-  font-size: 14px;
-  outline: none;
-  box-sizing: border-box;
-  font-family: inherit;
-  background: var(--bg-card);
-  color: var(--text-primary);
-}
-
-.add-task-input:focus {
-  border-color: var(--primary-light);
-  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
-}
-
-.column.drag-over {
-  background: rgba(13, 148, 136, 0.1);
-  box-shadow: 0 0 0 2px var(--border-focus);
-}
-
-/* WIP限制样式 */
-.column-header-left {
+  font-weight: 500;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  transition: all var(--transition-fast);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.column-header-right {
-  display: flex;
-  align-items: center;
+.add-task-btn:hover {
+  background: var(--bg-card);
+  color: var(--primary);
 }
 
-.task-count.over-wip {
-  background: rgba(220, 38, 38, 0.1);
-  color: var(--danger-color);
+.add-task-btn.disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
+.add-task-btn.disabled:hover {
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.add-task-form {
+  padding: 0 12px 12px;
+}
+
+.add-task-input {
+  width: 100%;
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  font-size: 14px;
+  font-weight: 400;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  transition: box-shadow var(--transition-fast);
+}
+
+.add-task-input:focus {
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+.add-task-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Drag Over State */
+.column.drag-over {
+  background: rgba(37, 99, 235, 0.05);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* WIP Settings */
 .wip-setting-btn {
   background: transparent;
   border: none;
   font-size: 14px;
   cursor: pointer;
   padding: 4px;
-  opacity: 0.6;
-  transition: opacity 0.2s;
+  opacity: 0.5;
+  transition: opacity var(--transition-fast);
+  color: var(--text-secondary);
 }
 
 .wip-setting-btn:hover {
@@ -140,58 +185,54 @@
 .wip-setting {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
 .wip-input {
   width: 50px;
-  padding: 4px 8px;
+  padding: 6px 8px;
   border: 1px solid var(--border-color);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
+  font-weight: 500;
   outline: none;
   background: var(--bg-card);
   color: var(--text-primary);
+  text-align: center;
 }
 
 .wip-input:focus {
-  border-color: var(--border-focus);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
 
 .wip-clear-btn {
   background: var(--bg-secondary);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: 14px;
   color: var(--text-muted);
   cursor: pointer;
-  padding: 2px 6px;
+  padding: 4px 8px;
+  transition: all var(--transition-fast);
 }
 
 .wip-clear-btn:hover {
-  background: rgba(220, 38, 38, 0.1);
-  color: var(--danger-color);
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
 }
 
 .wip-warning {
-  background: rgba(234, 88, 12, 0.1);
-  color: var(--warning-color);
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--warning);
   font-size: 12px;
-  padding: 6px 12px;
+  font-weight: 500;
+  padding: 8px 14px;
   text-align: center;
-  border-bottom: 1px solid rgba(234, 88, 12, 0.2);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 .column.over-wip {
-  box-shadow: 0 0 0 2px var(--warning-color);
-}
-
-.add-task-btn.disabled {
-  color: var(--text-muted);
-  cursor: not-allowed;
-}
-
-.add-task-btn.disabled:hover {
-  background: transparent;
-  color: var(--text-muted);
+  border-color: var(--warning);
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
 }

@@ -17,121 +17,136 @@
 
 .search-icon {
   position: absolute;
-  left: 12px;
+  left: 14px;
   font-size: 16px;
   pointer-events: none;
+  color: var(--text-muted);
 }
 
 .search-input {
   width: 100%;
-  padding: 10px 36px;
-  border: 1px solid #dfe1e6;
-  border-radius: 8px;
+  padding: 12px 40px 12px 42px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
   font-size: 14px;
+  font-weight: 400;
   outline: none;
-  transition: border-color 0.2s;
+  transition: all var(--transition-fast);
+  background: var(--bg-card);
+  color: var(--text-primary);
 }
 
 .search-input:focus {
-  border-color: #667eea;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 .search-input::placeholder {
-  color: #999;
+  color: var(--text-muted);
 }
 
 .clear-search-btn {
   position: absolute;
-  right: 8px;
-  background: none;
+  right: 10px;
+  background: transparent;
   border: none;
   font-size: 18px;
-  color: #999;
+  color: var(--text-muted);
   cursor: pointer;
   padding: 4px;
   line-height: 1;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
 }
 
 .clear-search-btn:hover {
-  color: #666;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
 }
 
+/* Filter Toggle Button */
 .filter-toggle-btn {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 10px 16px;
-  background: white;
-  border: 1px solid #dfe1e6;
-  border-radius: 8px;
+  gap: 8px;
+  padding: 12px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
   font-size: 14px;
-  color: #666;
+  font-weight: 500;
+  color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   position: relative;
 }
 
 .filter-toggle-btn:hover {
-  background: #f5f5f5;
+  background: var(--bg-secondary);
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .filter-toggle-btn.active {
-  background: #667eea;
-  border-color: #667eea;
+  background: var(--primary);
+  border-color: var(--primary);
   color: white;
 }
 
 .filter-toggle-btn.has-filters {
-  border-color: #667eea;
-  color: #667eea;
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .filter-toggle-btn.active.has-filters {
-  background: #667eea;
+  background: var(--primary);
   color: white;
 }
 
 .filter-badge {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 8px;
+  right: 8px;
   width: 8px;
   height: 8px;
-  background: #e74c3c;
-  border-radius: 50%;
+  background: var(--danger);
+  border-radius: var(--radius-full);
 }
 
 .filter-toggle-btn.active .filter-badge {
   background: white;
 }
 
+/* Clear All Button */
 .clear-all-btn {
-  padding: 10px 16px;
+  padding: 12px 18px;
   background: transparent;
-  border: 1px solid #e74c3c;
-  border-radius: 8px;
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-md);
   font-size: 14px;
-  color: #e74c3c;
+  font-weight: 500;
+  color: var(--danger);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 }
 
 .clear-all-btn:hover {
-  background: #e74c3c;
+  background: var(--danger);
   color: white;
 }
 
-/* 筛选面板 */
+/* Filter Panel */
 .filter-panel {
   margin-top: 12px;
-  padding: 16px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
 .filter-section {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .filter-section:last-child {
@@ -139,14 +154,15 @@
 }
 
 .filter-section-title {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  color: #5e6c84;
+  color: var(--text-muted);
   text-transform: uppercase;
-  margin: 0 0 10px 0;
+  letter-spacing: 0.05em;
+  margin: 0 0 12px 0;
 }
 
-/* 标签筛选 */
+/* Tag Filter */
 .filter-tags {
   display: flex;
   flex-wrap: wrap;
@@ -157,79 +173,93 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 12px;
-  border: 1px solid;
-  border-radius: 16px;
-  background: white;
+  padding: 8px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  background: var(--bg-card);
   font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 }
 
 .filter-tag-btn:hover {
-  opacity: 0.8;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.filter-tag-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
 }
 
 .tag-dot {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
 }
 
-/* 四象限筛选 */
+/* Quadrant Filter */
 .filter-quadrants {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  gap: 10px;
 }
 
 .filter-quadrant-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  background: white;
-  border: 1px solid #dfe1e6;
-  border-radius: 8px;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
   font-size: 13px;
-  color: #666;
+  font-weight: 500;
+  color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 }
 
 .filter-quadrant-btn:hover {
-  border-color: #667eea;
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .filter-quadrant-btn.active {
-  background: #667eea;
-  border-color: #667eea;
+  background: var(--primary);
+  border-color: var(--primary);
   color: white;
 }
 
-/* 截止日期筛选 */
+/* Due Date Filter */
 .filter-due-dates {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .filter-due-date-btn {
-  padding: 8px 16px;
-  background: white;
-  border: 1px solid #dfe1e6;
-  border-radius: 8px;
+  padding: 10px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
   font-size: 13px;
-  color: #666;
+  font-weight: 500;
+  color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 }
 
 .filter-due-date-btn:hover {
-  border-color: #667eea;
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .filter-due-date-btn.active {
-  background: #667eea;
-  border-color: #667eea;
+  background: var(--primary);
+  border-color: var(--primary);
   color: white;
 }

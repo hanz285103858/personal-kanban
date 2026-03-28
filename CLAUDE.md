@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-本文件为 Claude Code 提供项目指导。
+本文件为 Claude Code 提供项目指导。使用中文。
 
 ## 常用命令
 

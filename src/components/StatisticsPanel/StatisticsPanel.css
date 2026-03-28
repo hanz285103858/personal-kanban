@@ -4,22 +4,23 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--bg-overlay);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
 }
 
 .stats-panel {
   background: var(--bg-card);
-  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
   width: 90%;
-  max-width: 600px;
+  max-width: 640px;
   max-height: 85vh;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-xl);
   display: flex;
   flex-direction: column;
 }
@@ -28,9 +29,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 24px;
+  padding: 20px 28px;
   border-bottom: 1px solid var(--border-color);
-  background: var(--gradient-primary);
+  background: var(--primary);
 }
 
 .stats-header h2 {
@@ -38,83 +39,85 @@
   font-size: 20px;
   color: white;
   font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
-.close-btn {
-  background: rgba(255, 255, 255, 0.2);
+.stats-header .close-btn {
+  background: rgba(255, 255, 255, 0.15);
   border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   color: white;
-  font-size: 16px;
+  font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: all var(--transition-fast);
 }
 
-.close-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+.stats-header .close-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .stats-time-range {
   display: flex;
-  gap: 8px;
-  padding: 16px 24px;
+  gap: 10px;
+  padding: 18px 28px;
   border-bottom: 1px solid var(--border-color);
 }
 
 .range-btn {
   flex: 1;
-  padding: 10px 16px;
-  border: 2px solid var(--border-color);
+  padding: 12px 18px;
+  border: 1px solid var(--border-color);
   background: transparent;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
   color: var(--text-secondary);
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 }
 
 .range-btn:hover {
-  border-color: var(--primary-color, #667eea);
-  color: var(--primary-color, #667eea);
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .range-btn.active {
-  background: var(--gradient-primary);
-  border-color: transparent;
+  background: var(--primary);
+  border-color: var(--primary);
   color: white;
 }
 
 .stats-content {
-  padding: 24px;
+  padding: 28px;
   overflow-y: auto;
   flex: 1;
 }
 
-/* 概览卡片 */
+/* Overview Cards */
 .stats-overview {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 14px;
+  margin-bottom: 28px;
 }
 
 .overview-card {
   background: var(--bg-secondary);
-  border-radius: 12px;
-  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 18px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .overview-icon {
-  font-size: 28px;
+  font-size: 32px;
 }
 
 .overview-info {
@@ -123,37 +126,45 @@
 }
 
 .overview-value {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--text-primary);
+  letter-spacing: -0.02em;
 }
 
 .overview-label {
   font-size: 12px;
-  color: var(--text-secondary);
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-top: 2px;
 }
 
-/* 统计区块 */
+/* Stats Section */
 .stats-section {
-  margin-bottom: 24px;
+  margin-bottom: 28px;
+}
+
+.stats-section:last-child {
+  margin-bottom: 0;
 }
 
 .stats-section h3 {
   margin: 0 0 16px 0;
-  font-size: 16px;
+  font-size: 15px;
   color: var(--text-primary);
   font-weight: 600;
 }
 
-/* 趋势图 */
+/* Trend Chart */
 .trend-chart {
   display: flex;
   align-items: flex-end;
-  gap: 4px;
-  height: 120px;
-  padding: 12px;
+  gap: 6px;
+  height: 130px;
+  padding: 16px;
   background: var(--bg-secondary);
-  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
 }
 
 .trend-bar-container {
@@ -167,7 +178,7 @@
 .trend-bar {
   width: 100%;
   min-height: 4px;
-  background: var(--gradient-primary);
+  background: var(--primary);
   border-radius: 4px 4px 0 0;
   position: relative;
   transition: height 0.3s ease;
@@ -178,19 +189,20 @@
 
 .bar-value {
   position: absolute;
-  top: -18px;
-  font-size: 10px;
-  color: var(--text-secondary);
+  top: -20px;
+  font-size: 11px;
   font-weight: 600;
+  color: var(--text-secondary);
 }
 
 .bar-label {
-  margin-top: 4px;
-  font-size: 10px;
-  color: var(--text-secondary);
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
 }
 
-/* 四象限图表 */
+/* Quadrant Chart */
 .quadrant-chart {
   display: flex;
   flex-direction: column;
@@ -199,19 +211,20 @@
 
 .quadrant-item {
   background: var(--bg-secondary);
-  border-radius: 10px;
-  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
 }
 
 .quadrant-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .quadrant-icon {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .quadrant-name {
@@ -222,15 +235,15 @@
 
 .quadrant-bar-bg {
   height: 8px;
-  background: var(--bg-primary);
-  border-radius: 4px;
+  background: var(--bg-card);
+  border-radius: var(--radius-full);
   overflow: hidden;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .quadrant-bar {
   height: 100%;
-  border-radius: 4px;
+  border-radius: var(--radius-full);
   transition: width 0.3s ease;
 }
 
@@ -241,7 +254,7 @@
 }
 
 .quadrant-count {
-  color: var(--text-secondary);
+  color: var(--text-muted);
 }
 
 .quadrant-percent {
@@ -249,25 +262,27 @@
   font-weight: 600;
 }
 
-/* 标签统计 */
+/* Tag Chart */
 .tag-chart {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .tag-stat-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 12px;
+  gap: 14px;
+  padding: 10px 14px;
   background: var(--bg-secondary);
-  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
 }
 
 .tag-stat-name {
-  width: 60px;
+  width: 70px;
   font-size: 13px;
+  font-weight: 500;
   color: var(--text-secondary);
   text-transform: capitalize;
 }
@@ -275,40 +290,41 @@
 .tag-stat-bar-bg {
   flex: 1;
   height: 6px;
-  background: var(--bg-primary);
-  border-radius: 3px;
+  background: var(--bg-card);
+  border-radius: var(--radius-full);
   overflow: hidden;
 }
 
 .tag-stat-bar {
   height: 100%;
-  background: var(--gradient-primary);
-  border-radius: 3px;
+  background: var(--primary);
+  border-radius: var(--radius-full);
   transition: width 0.3s ease;
 }
 
 .tag-stat-count {
-  width: 30px;
+  width: 32px;
   text-align: right;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-primary);
 }
 
-/* 子任务统计 */
+/* Subtask Stats */
 .subtask-stats {
   display: flex;
   align-items: center;
   gap: 32px;
-  padding: 20px;
+  padding: 24px;
   background: var(--bg-secondary);
-  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
 }
 
 .subtask-progress-ring {
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
 }
 
 .subtask-progress-ring svg {
@@ -317,14 +333,14 @@
 
 .progress-bg {
   fill: none;
-  stroke: var(--bg-primary);
-  stroke-width: 3;
+  stroke: var(--bg-card);
+  stroke-width: 4;
 }
 
 .progress-fill {
   fill: none;
-  stroke: #2ecc71;
-  stroke-width: 3;
+  stroke: var(--success);
+  stroke-width: 4;
   stroke-linecap: round;
   transition: stroke-dasharray 0.5s ease;
 }
@@ -334,7 +350,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--text-primary);
 }
@@ -343,7 +359,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .subtask-detail-item {
@@ -364,29 +380,33 @@
 }
 
 .subtask-detail-item.completed .detail-value {
-  color: #2ecc71;
+  color: var(--success);
 }
 
 .subtask-detail-item.pending .detail-value {
-  color: #f39c12;
+  color: var(--warning);
 }
 
-/* 响应式 */
+/* Responsive */
 @media (max-width: 480px) {
   .stats-overview {
     grid-template-columns: 1fr;
   }
 
   .overview-card {
-    padding: 12px;
+    padding: 14px;
   }
 
   .overview-value {
-    font-size: 20px;
+    font-size: 24px;
   }
 
   .subtask-stats {
     flex-direction: column;
     text-align: center;
+  }
+
+  .stats-time-range {
+    flex-wrap: wrap;
   }
 }
