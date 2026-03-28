@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { db, type Task, type Column, type Board } from '../stores/db';
+import { db, type Task, type Column, type Board, type Subtask } from '../stores/db';
 
 // 生成唯一ID
 const generateId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -116,6 +116,56 @@ export function useDbBoard() {
     await loadData();
   }, [loadData]);
 
+  // 添加子任务
+  const addSubtask = useCallback(async (taskId: string, title: string) => {
+    const task = await db.tasks.get(taskId);
+    if (!task) return;
+
+    const newSubtask: Subtask = {
+      id: generateId(),
+      title: title.trim(),
+      completed: false,
+    };
+
+    const subtasks = [...(task.subtasks || []), newSubtask];
+    await db.tasks.update(taskId, { subtasks });
+    await loadData();
+  }, [loadData]);
+
+  // 切换子任务完成状态
+  const toggleSubtask = useCallback(async (taskId: string, subtaskId: string) => {
+    const task = await db.tasks.get(taskId);
+    if (!task || !task.subtasks) return;
+
+    const subtasks = task.subtasks.map(st =>
+      st.id === subtaskId ? { ...st, completed: !st.completed } : st
+    );
+    await db.tasks.update(taskId, { subtasks });
+    await loadData();
+  }, [loadData]);
+
+  // 删除子任务
+  const deleteSubtask = useCallback(async (taskId: string, subtaskId: string) => {
+    const task = await db.tasks.get(taskId);
+    if (!task || !task.subtasks) return;
+
+    const subtasks = task.subtasks.filter(st => st.id !== subtaskId);
+    await db.tasks.update(taskId, { subtasks });
+    await loadData();
+  }, [loadData]);
+
+  // 更新子任务标题
+  const updateSubtaskTitle = useCallback(async (taskId: string, subtaskId: string, title: string) => {
+    const task = await db.tasks.get(taskId);
+    if (!task || !task.subtasks) return;
+
+    const subtasks = task.subtasks.map(st =>
+      st.id === subtaskId ? { ...st, title: title.trim() } : st
+    );
+    await db.tasks.update(taskId, { subtasks });
+    await loadData();
+  }, [loadData]);
+
   return {
     boardData,
     loading,
@@ -125,5 +175,9 @@ export function useDbBoard() {
     moveTask,
     updateTaskDescription,
     updateTaskDueDate,
+    addSubtask,
+    toggleSubtask,
+    deleteSubtask,
+    updateSubtaskTitle,
   };
 }

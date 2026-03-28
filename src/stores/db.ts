@@ -1,5 +1,12 @@
 import Dexie, { type EntityTable } from 'dexie';
 
+// 子任务类型
+export interface Subtask {
+  id: string;
+  title: string;
+  completed: boolean;
+}
+
 // 任务类型
 export interface Task {
   id: string;
@@ -7,6 +14,7 @@ export interface Task {
   title: string;
   description?: string;  // 任务描述/备注
   dueDate?: string;  // 截止日期 (YYYY-MM-DD 格式)
+  subtasks?: Subtask[];  // 子任务列表
   createdAt: Date;
 }
 

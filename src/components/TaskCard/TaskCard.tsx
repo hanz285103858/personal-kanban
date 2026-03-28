@@ -88,6 +88,12 @@ export function TaskCard({ task, onDelete, onUpdate, onClick }: TaskCardProps) {
   const isOverdue = daysRemaining !== null && daysRemaining < 0;
   const isDueToday = daysRemaining === 0;
 
+  // 计算子任务进度
+  const subtasks = task.subtasks || [];
+  const hasSubtasks = subtasks.length > 0;
+  const completedSubtasks = subtasks.filter(st => st.completed).length;
+  const allSubtasksCompleted = hasSubtasks && completedSubtasks === subtasks.length;
+
   if (isEditing) {
     return (
       <div className="task-card editing">
@@ -116,11 +122,18 @@ export function TaskCard({ task, onDelete, onUpdate, onClick }: TaskCardProps) {
     >
       <div className="task-content">
         <span className="task-title">{task.title}</span>
-        {daysRemaining !== null && (
-          <span className={`due-date-badge ${isOverdue ? 'overdue' : ''} ${isDueToday ? 'due-today' : ''}`}>
-            {formatDaysRemaining(daysRemaining)}
-          </span>
-        )}
+        <div className="task-badges">
+          {daysRemaining !== null && (
+            <span className={`due-date-badge ${isOverdue ? 'overdue' : ''} ${isDueToday ? 'due-today' : ''}`}>
+              {formatDaysRemaining(daysRemaining)}
+            </span>
+          )}
+          {hasSubtasks && (
+            <span className={`subtask-badge ${allSubtasksCompleted ? 'completed' : ''}`}>
+              ☑ {completedSubtasks}/{subtasks.length}
+            </span>
+          )}
+        </div>
       </div>
       <div className="task-icons">
         {task.description && <span className="has-description">☰</span>}
