@@ -1,16 +1,87 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import type { DragStartEvent, DragEndEvent } from '@dnd-kit/core';
 import { useDbBoard } from '../../hooks/useDbBoard';
 import { Column } from '../Column/Column';
 import { TaskDetail } from '../TaskDetail/TaskDetail';
-import type { Task } from '../../stores/db';
+import { SearchFilter } from '../SearchFilter/SearchFilter';
+import type { Task, Quadrant } from '../../stores/db';
 import './Board.css';
 
 export function Board() {
   const { boardData, loading, addTask, deleteTask, updateTask, moveTask, updateTaskDescription, updateTaskDueDate, updateTaskQuadrant, toggleTaskTag, addSubtask, toggleSubtask, deleteSubtask, updateColumnWipLimit } = useDbBoard();
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+
+  // 搜索筛选状态
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [filterTags, setFilterTags] = useState<string[]>([]);
+  const [filterQuadrant, setFilterQuadrant] = useState<Quadrant | undefined>();
+  const [filterDueDate, setFilterDueDate] = useState<'overdue' | 'today' | 'week' | undefined>();
+
+  // 过滤任务
+  const filteredBoardData = useMemo(() => {
+    if (!boardData) return null;
+
+    // 检查是否有任何筛选条件
+    const hasFilters = searchKeyword.trim() || filterTags.length > 0 || filterQuadrant || filterDueDate;
+    if (!hasFilters) return boardData;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const weekEnd = new Date(today);
+    weekEnd.setDate(weekEnd.getDate() + 7);
+
+    return {
+      ...boardData,
+      columns: boardData.columns.map(column => ({
+        ...column,
+        tasks: column.tasks.filter(task => {
+          // 关键词搜索
+          if (searchKeyword.trim()) {
+            const keyword = searchKeyword.toLowerCase();
+            const titleMatch = task.title.toLowerCase().includes(keyword);
+            const descMatch = task.description?.toLowerCase().includes(keyword);
+            if (!titleMatch && !descMatch) return false;
+          }
+
+          // 标签筛选
+          if (filterTags.length > 0) {
+            const taskTags = task.tags || [];
+            if (!filterTags.some(tagId => taskTags.includes(tagId))) return false;
+          }
+
+          // 象限筛选
+          if (filterQuadrant && task.quadrant !== filterQuadrant) {
+            return false;
+          }
+
+          // 截止日期筛选
+          if (filterDueDate && task.dueDate) {
+            const dueDate = new Date(task.dueDate);
+            dueDate.setHours(0, 0, 0, 0);
+            const diffDays = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+            if (filterDueDate === 'overdue' && diffDays >= 0) return false;
+            if (filterDueDate === 'today' && diffDays !== 0) return false;
+            if (filterDueDate === 'week' && (diffDays < 0 || diffDays > 7)) return false;
+          } else if (filterDueDate && !task.dueDate) {
+            return false;
+          }
+
+          return true;
+        }),
+      })),
+    };
+  }, [boardData, searchKeyword, filterTags, filterQuadrant, filterDueDate]);
+
+  const handleClearAllFilters = () => {
+    setSearchKeyword('');
+    setFilterTags([]);
+    setFilterQuadrant(undefined);
+    setFilterDueDate(undefined);
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -89,8 +160,21 @@ export function Board() {
         <div className="board-header">
           <h1 className="board-title">{boardData.board.name}</h1>
         </div>
+
+        <SearchFilter
+          onSearch={setSearchKeyword}
+          onFilterTags={setFilterTags}
+          onFilterQuadrant={setFilterQuadrant}
+          onFilterDueDate={setFilterDueDate}
+          onClearAll={handleClearAllFilters}
+          activeTagFilters={filterTags}
+          activeQuadrantFilter={filterQuadrant}
+          activeDueDateFilter={filterDueDate}
+          searchKeyword={searchKeyword}
+        />
+
         <div className="board-columns">
-          {boardData.columns.map((column) => (
+          {filteredBoardData?.columns.map((column) => (
             <Column
               key={column.id}
               column={column}
