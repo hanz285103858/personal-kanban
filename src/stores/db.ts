@@ -7,6 +7,9 @@ export interface Subtask {
   completed: boolean;
 }
 
+// 四象限类型
+export type Quadrant = 'urgent-important' | 'not-urgent-important' | 'urgent-not-important' | 'not-urgent-not-important';
+
 // 任务类型
 export interface Task {
   id: string;
@@ -15,6 +18,7 @@ export interface Task {
   description?: string;  // 任务描述/备注
   dueDate?: string;  // 截止日期 (YYYY-MM-DD 格式)
   subtasks?: Subtask[];  // 子任务列表
+  quadrant?: Quadrant;  // 四象限标记
   createdAt: Date;
 }
 

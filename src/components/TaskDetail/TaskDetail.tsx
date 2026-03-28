@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Task } from '../../stores/db';
+import type { Task, Quadrant } from '../../stores/db';
 import './TaskDetail.css';
 
 interface TaskDetailProps {
@@ -8,15 +8,25 @@ interface TaskDetailProps {
   onUpdateTitle: (taskId: string, newTitle: string) => void;
   onUpdateDescription: (taskId: string, description: string) => void;
   onUpdateDueDate: (taskId: string, dueDate: string | undefined) => void;
+  onUpdateQuadrant: (taskId: string, quadrant: Quadrant | undefined) => void;
   onAddSubtask: (taskId: string, title: string) => void;
   onToggleSubtask: (taskId: string, subtaskId: string) => void;
   onDeleteSubtask: (taskId: string, subtaskId: string) => void;
 }
 
-export function TaskDetail({ task, onClose, onUpdateTitle, onUpdateDescription, onUpdateDueDate, onAddSubtask, onToggleSubtask, onDeleteSubtask }: TaskDetailProps) {
+// 四象限配置
+const quadrantOptions: { value: Quadrant; label: string; color: string; icon: string }[] = [
+  { value: 'urgent-important', label: '重要紧急', color: '#e74c3c', icon: '🔥' },
+  { value: 'not-urgent-important', label: '重要不紧急', color: '#3498db', icon: '📌' },
+  { value: 'urgent-not-important', label: '紧急不重要', color: '#f39c12', icon: '⚡' },
+  { value: 'not-urgent-not-important', label: '不重要不紧急', color: '#95a5a6', icon: '📝' },
+];
+
+export function TaskDetail({ task, onClose, onUpdateTitle, onUpdateDescription, onUpdateDueDate, onUpdateQuadrant, onAddSubtask, onToggleSubtask, onDeleteSubtask }: TaskDetailProps) {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description || '');
   const [dueDate, setDueDate] = useState(task.dueDate || '');
+  const [quadrant, setQuadrant] = useState<Quadrant | undefined>(task.quadrant);
   const [newSubtask, setNewSubtask] = useState('');
 
   const handleTitleBlur = () => {
@@ -40,6 +50,16 @@ export function TaskDetail({ task, onClose, onUpdateTitle, onUpdateDescription, 
   const handleClearDueDate = () => {
     setDueDate('');
     onUpdateDueDate(task.id, undefined);
+  };
+
+  const handleQuadrantChange = (newQuadrant: Quadrant) => {
+    setQuadrant(newQuadrant);
+    onUpdateQuadrant(task.id, newQuadrant);
+  };
+
+  const handleClearQuadrant = () => {
+    setQuadrant(undefined);
+    onUpdateQuadrant(task.id, undefined);
   };
 
   const handleAddSubtask = () => {
@@ -106,6 +126,35 @@ export function TaskDetail({ task, onClose, onUpdateTitle, onUpdateDescription, 
                 清除
               </button>
             )}
+          </div>
+        </div>
+
+        <div className="task-detail-section">
+          <div className="section-header">
+            <h3 className="section-title">四象限标记</h3>
+            {quadrant && (
+              <button className="clear-quadrant-btn" onClick={handleClearQuadrant}>
+                清除
+              </button>
+            )}
+          </div>
+          <div className="quadrant-selector">
+            {quadrantOptions.map((option) => (
+              <button
+                key={option.value}
+                className={`quadrant-btn ${quadrant === option.value ? 'active' : ''}`}
+                onClick={() => handleQuadrantChange(option.value)}
+                style={{
+                  borderColor: quadrant === option.value ? option.color : '#dfe1e6',
+                  backgroundColor: quadrant === option.value ? `${option.color}15` : 'white',
+                }}
+              >
+                <span className="quadrant-icon">{option.icon}</span>
+                <span className="quadrant-label" style={{ color: quadrant === option.value ? option.color : '#666' }}>
+                  {option.label}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
 

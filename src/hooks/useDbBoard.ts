@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { db, type Task, type Column, type Board, type Subtask } from '../stores/db';
+import { db, type Task, type Column, type Board, type Subtask, type Quadrant } from '../stores/db';
 
 // 生成唯一ID
 const generateId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -166,6 +166,12 @@ export function useDbBoard() {
     await loadData();
   }, [loadData]);
 
+  // 更新任务象限
+  const updateTaskQuadrant = useCallback(async (taskId: string, quadrant: Quadrant | undefined) => {
+    await db.tasks.update(taskId, { quadrant });
+    await loadData();
+  }, [loadData]);
+
   return {
     boardData,
     loading,
@@ -179,5 +185,6 @@ export function useDbBoard() {
     toggleSubtask,
     deleteSubtask,
     updateSubtaskTitle,
+    updateTaskQuadrant,
   };
 }

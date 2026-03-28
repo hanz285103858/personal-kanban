@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useDraggable } from '@dnd-kit/core';
-import type { Task } from '../../stores/db';
+import type { Task, Quadrant } from '../../stores/db';
 import './TaskCard.css';
 
 interface TaskCardProps {
@@ -9,6 +9,14 @@ interface TaskCardProps {
   onUpdate: (taskId: string, newTitle: string) => void;
   onClick: (task: Task) => void;
 }
+
+// 四象限配置
+const quadrantConfig: Record<Quadrant, { icon: string; color: string; label: string }> = {
+  'urgent-important': { icon: '🔥', color: '#e74c3c', label: '重要紧急' },
+  'not-urgent-important': { icon: '📌', color: '#3498db', label: '重要不紧急' },
+  'urgent-not-important': { icon: '⚡', color: '#f39c12', label: '紧急不重要' },
+  'not-urgent-not-important': { icon: '📝', color: '#95a5a6', label: '不重要不紧急' },
+};
 
 // 计算剩余天数
 function getDaysRemaining(dueDate: string): number {
@@ -84,7 +92,8 @@ export function TaskCard({ task, onDelete, onUpdate, onClick }: TaskCardProps) {
   };
 
   // 计算截止日期状态
-  const daysRemaining = task.dueDate ? getDaysRemaining(task.dueDate) : null;
+  const dueDate = task.dueDate;
+  const daysRemaining = dueDate ? getDaysRemaining(dueDate) : null;
   const isOverdue = daysRemaining !== null && daysRemaining < 0;
   const isDueToday = daysRemaining === 0;
 
@@ -93,6 +102,10 @@ export function TaskCard({ task, onDelete, onUpdate, onClick }: TaskCardProps) {
   const hasSubtasks = subtasks.length > 0;
   const completedSubtasks = subtasks.filter(st => st.completed).length;
   const allSubtasksCompleted = hasSubtasks && completedSubtasks === subtasks.length;
+
+  // 获取象限配置
+  const quadrant = task.quadrant;
+  const quadrantInfo = quadrant ? quadrantConfig[quadrant] : null;
 
   if (isEditing) {
     return (
@@ -136,6 +149,15 @@ export function TaskCard({ task, onDelete, onUpdate, onClick }: TaskCardProps) {
         </div>
       </div>
       <div className="task-icons">
+        {quadrantInfo && (
+          <span
+            className="quadrant-badge"
+            style={{ backgroundColor: `${quadrantInfo.color}20`, color: quadrantInfo.color }}
+            title={quadrantInfo.label}
+          >
+            {quadrantInfo.icon}
+          </span>
+        )}
         {task.description && <span className="has-description">☰</span>}
         <button className="delete-btn" onClick={handleDelete} title="删除任务">
           ×

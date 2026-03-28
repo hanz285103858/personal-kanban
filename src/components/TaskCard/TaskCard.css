@@ -90,6 +90,15 @@
   flex-wrap: wrap;
 }
 
+/* 象限徽章样式 */
+.quadrant-badge {
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+}
+
 .delete-btn {
   opacity: 0;
   background: none;

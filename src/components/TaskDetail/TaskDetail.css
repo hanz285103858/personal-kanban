@@ -239,3 +239,56 @@
 .add-subtask-btn:not(:disabled):hover {
   opacity: 0.9;
 }
+
+/* 四象限选择器样式 */
+.clear-quadrant-btn {
+  padding: 4px 12px;
+  background: transparent;
+  border: 1px solid #dfe1e6;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.clear-quadrant-btn:hover {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.quadrant-selector {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.quadrant-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border: 2px solid #dfe1e6;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.quadrant-btn:hover {
+  border-color: #667eea;
+}
+
+.quadrant-btn.active {
+  border-width: 2px;
+}
+
+.quadrant-icon {
+  font-size: 18px;
+}
+
+.quadrant-label {
+  font-size: 13px;
+  font-weight: 500;
+}
