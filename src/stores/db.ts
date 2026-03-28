@@ -6,6 +6,7 @@ export interface Task {
   columnId: string;
   title: string;
   description?: string;  // 任务描述/备注
+  dueDate?: string;  // 截止日期 (YYYY-MM-DD 格式)
   createdAt: Date;
 }
 

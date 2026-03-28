@@ -8,7 +8,7 @@ import type { Task } from '../../stores/db';
 import './Board.css';
 
 export function Board() {
-  const { boardData, loading, addTask, deleteTask, updateTask, moveTask, updateTaskDescription } = useDbBoard();
+  const { boardData, loading, addTask, deleteTask, updateTask, moveTask, updateTaskDescription, updateTaskDueDate } = useDbBoard();
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
@@ -109,12 +109,14 @@ export function Board() {
           </div>
         ) : null}
       </DragOverlay>
-      {selectedTask && (
+      {selectedTask && boardData && (
         <TaskDetail
-          task={selectedTask}
+          key={selectedTask.id}
+          task={boardData.columns.flatMap(col => col.tasks).find(t => t.id === selectedTask.id) || selectedTask}
           onClose={handleCloseDetail}
           onUpdateTitle={updateTask}
           onUpdateDescription={updateTaskDescription}
+          onUpdateDueDate={updateTaskDueDate}
         />
       )}
     </DndContext>

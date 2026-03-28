@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { Task } from '../../stores/db';
 import './TaskDetail.css';
 
@@ -7,16 +7,13 @@ interface TaskDetailProps {
   onClose: () => void;
   onUpdateTitle: (taskId: string, newTitle: string) => void;
   onUpdateDescription: (taskId: string, description: string) => void;
+  onUpdateDueDate: (taskId: string, dueDate: string | undefined) => void;
 }
 
-export function TaskDetail({ task, onClose, onUpdateTitle, onUpdateDescription }: TaskDetailProps) {
+export function TaskDetail({ task, onClose, onUpdateTitle, onUpdateDescription, onUpdateDueDate }: TaskDetailProps) {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description || '');
-
-  useEffect(() => {
-    setTitle(task.title);
-    setDescription(task.description || '');
-  }, [task]);
+  const [dueDate, setDueDate] = useState(task.dueDate || '');
 
   const handleTitleBlur = () => {
     if (title.trim() && title !== task.title) {
@@ -28,6 +25,17 @@ export function TaskDetail({ task, onClose, onUpdateTitle, onUpdateDescription }
     if (description !== task.description) {
       onUpdateDescription(task.id, description);
     }
+  };
+
+  const handleDueDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newDate = e.target.value;
+    setDueDate(newDate);
+    onUpdateDueDate(task.id, newDate || undefined);
+  };
+
+  const handleClearDueDate = () => {
+    setDueDate('');
+    onUpdateDueDate(task.id, undefined);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -61,6 +69,23 @@ export function TaskDetail({ task, onClose, onUpdateTitle, onUpdateDescription }
             onBlur={handleDescriptionBlur}
             rows={5}
           />
+        </div>
+
+        <div className="task-detail-section">
+          <h3 className="section-title">截止日期</h3>
+          <div className="due-date-wrapper">
+            <input
+              type="date"
+              className="due-date-input"
+              value={dueDate}
+              onChange={handleDueDateChange}
+            />
+            {dueDate && (
+              <button className="clear-date-btn" onClick={handleClearDueDate}>
+                清除
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

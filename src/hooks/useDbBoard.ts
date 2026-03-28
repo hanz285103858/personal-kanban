@@ -110,6 +110,12 @@ export function useDbBoard() {
     await loadData();
   }, [loadData]);
 
+  // 更新任务截止日期
+  const updateTaskDueDate = useCallback(async (taskId: string, dueDate: string | undefined) => {
+    await db.tasks.update(taskId, { dueDate });
+    await loadData();
+  }, [loadData]);
+
   return {
     boardData,
     loading,
@@ -118,5 +124,6 @@ export function useDbBoard() {
     updateTask,
     moveTask,
     updateTaskDescription,
+    updateTaskDueDate,
   };
 }

@@ -10,6 +10,24 @@ interface TaskCardProps {
   onClick: (task: Task) => void;
 }
 
+// 计算剩余天数
+function getDaysRemaining(dueDate: string): number {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const due = new Date(dueDate);
+  due.setHours(0, 0, 0, 0);
+  const diffTime = due.getTime() - today.getTime();
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+}
+
+// 格式化剩余时间显示
+function formatDaysRemaining(days: number): string {
+  if (days < 0) return `过期 ${Math.abs(days)} 天`;
+  if (days === 0) return '今天截止';
+  if (days === 1) return '明天截止';
+  return `${days} 天后截止`;
+}
+
 export function TaskCard({ task, onDelete, onUpdate, onClick }: TaskCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(task.title);
@@ -65,6 +83,11 @@ export function TaskCard({ task, onDelete, onUpdate, onClick }: TaskCardProps) {
     }
   };
 
+  // 计算截止日期状态
+  const daysRemaining = task.dueDate ? getDaysRemaining(task.dueDate) : null;
+  const isOverdue = daysRemaining !== null && daysRemaining < 0;
+  const isDueToday = daysRemaining === 0;
+
   if (isEditing) {
     return (
       <div className="task-card editing">
@@ -85,17 +108,26 @@ export function TaskCard({ task, onDelete, onUpdate, onClick }: TaskCardProps) {
     <div
       ref={setNodeRef}
       style={style}
-      className={`task-card ${isDragging ? 'dragging' : ''}`}
+      className={`task-card ${isDragging ? 'dragging' : ''} ${isOverdue ? 'overdue' : ''} ${isDueToday ? 'due-today' : ''}`}
       onDoubleClick={handleDoubleClick}
       onClick={handleClick}
       {...listeners}
       {...attributes}
     >
-      <span className="task-title">{task.title}</span>
-      {task.description && <span className="has-description">☰</span>}
-      <button className="delete-btn" onClick={handleDelete} title="删除任务">
-        ×
-      </button>
+      <div className="task-content">
+        <span className="task-title">{task.title}</span>
+        {daysRemaining !== null && (
+          <span className={`due-date-badge ${isOverdue ? 'overdue' : ''} ${isDueToday ? 'due-today' : ''}`}>
+            {formatDaysRemaining(daysRemaining)}
+          </span>
+        )}
+      </div>
+      <div className="task-icons">
+        {task.description && <span className="has-description">☰</span>}
+        <button className="delete-btn" onClick={handleDelete} title="删除任务">
+          ×
+        </button>
+      </div>
     </div>
   );
 }
